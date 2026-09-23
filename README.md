@@ -25,26 +25,52 @@ download.
 ## Data
 
 The app reads `data/ransom_dataset.csv`, `data/vuln_dataset.csv`, and
-`data/mailsec_dataset.csv`. The data is meant to be refreshed daily by a
-scheduled GitHub Actions workflow under `.github/workflows/`. That workflow
-isn't in the repo yet, so until it lands the CSVs are updated locally with the
-collectors in `scripts/`.
+`data/mailsec_dataset.csv`. The CSVs are read at runtime and are the only data
+inputs the app uses.
 
-## Local run
+They are refreshed daily by the `ingest` GitHub Actions workflow
+(`.github/workflows/ingest.yml`): it runs the collectors in `scripts/` and
+commits any changed CSVs back to the repo, which triggers a redeploy. The
+workflow needs two repository secrets:
+
+- `OPENROUTER_API_KEY` — used to classify the sector of each new ransomware
+  victim. Optional: without it, ingestion still runs and falls back to the
+  source's own sector mapping.
+- `NVD_API_KEY` — optional; raises the NVD rate limit when fetching CVSS scores.
+
+You can also run the collectors locally. Copy `.env.example` to `.env`, fill in
+the keys, and run:
+
+```bash
+pip install -r requirements-ingestion.txt
+python scripts/ransom_dataset.py
+python scripts/vuln_dataset.py
+python scripts/mailsec.py
+```
+
+The collectors write directly to `data/*.csv`. Logs go to `logs/` (gitignored);
+set `LOG_LEVEL` to control console verbosity.
+
+## Running locally
 
 ```bash
 pip install -r requirements.txt
 streamlit run Home.py
 ```
 
-Needs Streamlit 1.41 or newer (the pages use `st.segmented_control` and
-bordered metrics). The app serves at http://localhost:8501.
+Needs Streamlit 1.53. The app serves at http://localhost:8501 and needs no
+server-side secrets — the LLM classification runs only during ingestion, never
+in the app.
 
 ## Tests
 
 ```bash
+pip install -r requirements-ingestion.txt
 pytest
 ```
+
+The suite runs in CI on every push and pull request
+(`.github/workflows/ci.yml`).
 
 ## Project structure
 
@@ -63,4 +89,4 @@ overwatch/
 
 - No report or PDF generation.
 - No data editor: the datasets are read-only inputs.
-- No server-side secrets required at runtime.
+- No server-side secrets in the app.
