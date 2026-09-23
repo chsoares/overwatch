@@ -1,0 +1,9 @@
+-r requirements.txt
+requests
+beautifulsoup4
+dnspython
+python-dotenv
+trafilatura
+nvdlib
+cve-searchsploit
+pytest

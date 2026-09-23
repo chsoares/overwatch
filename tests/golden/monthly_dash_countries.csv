@@ -1,0 +1,61 @@
+country,ISO3,ISO2,counts,proportion
+Estados Unidos,USA,US,218,0.483
+Reino Unido,GBR,GB,28,0.062
+Canadá,CAN,CA,22,0.049
+Alemanha,DEU,DE,19,0.042
+índia,IND,IN,12,0.027
+México,MEX,MX,8,0.018
+Itália,ITA,IT,8,0.018
+Espanha,ESP,ES,8,0.018
+Bélgica,BEL,BE,7,0.016
+Austrália,AUS,AU,6,0.013
+Brasil,BRA,BR,6,0.013
+China,CHN,CN,5,0.011
+Polônia,POL,PL,5,0.011
+França,FRA,FR,5,0.011
+Cingapura,SGP,SG,4,0.009
+Japão,JPN,JP,4,0.009
+Nova Zelândia,NZL,NZ,3,0.007
+Tailândia,THA,TH,3,0.007
+Suécia,SWE,SE,3,0.007
+Indonésia,IDN,ID,3,0.007
+África do Sul,ZAF,ZA,3,0.007
+Áustria,AUT,AT,3,0.007
+Colômbia,COL,CO,2,0.004
+Coréia do Sul,KOR,KR,2,0.004
+Malásia,MYS,MY,2,0.004
+Eslováquia,SVK,SK,2,0.004
+Irã,IRN,IR,2,0.004
+Tuvalu,TUV,TV,2,0.004
+Portugal,PRT,PT,2,0.004
+Noruega,NOR,NO,2,0.004
+Peru,PER,PE,2,0.004
+Holanda,NLD,NL,2,0.004
+Turquia,TUR,TR,2,0.004
+Taiwan,TWN,TW,2,0.004
+Líbano,LBN,LB,2,0.004
+Geórgia,GEO,GE,2,0.004
+Honduras,HND,HN,2,0.004
+Emirados Árabes,ARE,AE,1,0.002
+Luxemburgo,LUX,LU,1,0.002
+Argentina,ARG,AR,1,0.002
+Hong Kong,HKG,HK,1,0.002
+Macedônia (República Yugoslava),MKD,MK,1,0.002
+Tunísia,TUN,TN,1,0.002
+Rússia,RUS,RU,1,0.002
+Bulgária,BGR,BG,1,0.002
+Suíça,CHE,CH,1,0.002
+Paquistão,PAK,PK,1,0.002
+Bangladesh,BGD,BD,1,0.002
+Egito,EGY,EG,1,0.002
+Romênia,ROM,RO,1,0.002
+Belize,BLZ,BZ,1,0.002
+Bermudas,BMU,BM,1,0.002
+Dinamarca,DNK,DK,1,0.002
+Sri Lanka,LKA,LK,1,0.002
+República Tcheca,CZE,CZ,1,0.002
+Trinidad and Tobago,TTO,TT,1,0.002
+Israel,ISR,IL,1,0.002
+Vietnã,VNM,VN,1,0.002
+Filipinas,PHL,PH,1,0.002
+Gana,GHA,GH,1,0.002

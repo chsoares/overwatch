@@ -1,0 +1,91 @@
+country,ISO3,ISO2,counts,proportion
+Estados Unidos,USA,US,712,0.45
+Reino Unido,GBR,GB,84,0.053
+Canadá,CAN,CA,68,0.043
+Alemanha,DEU,DE,59,0.037
+Itália,ITA,IT,40,0.025
+índia,IND,IN,39,0.025
+Brasil,BRA,BR,37,0.023
+Espanha,ESP,ES,36,0.023
+França,FRA,FR,32,0.02
+Austrália,AUS,AU,24,0.015
+Bélgica,BEL,BE,18,0.011
+México,MEX,MX,17,0.011
+Israel,ISR,IL,15,0.009
+Suíça,CHE,CH,13,0.008
+Japão,JPN,JP,12,0.008
+Emirados Árabes,ARE,AE,12,0.008
+Polônia,POL,PL,9,0.006
+Suécia,SWE,SE,8,0.005
+Cingapura,SGP,SG,8,0.005
+Holanda,NLD,NL,8,0.005
+África do Sul,ZAF,ZA,7,0.004
+China,CHN,CN,7,0.004
+Argentina,ARG,AR,7,0.004
+Colômbia,COL,CO,7,0.004
+Taiwan,TWN,TW,7,0.004
+Tailândia,THA,TH,6,0.004
+Áustria,AUT,AT,6,0.004
+Irlanda,IRL,IE,6,0.004
+Geórgia,GEO,GE,5,0.003
+Noruega,NOR,NO,5,0.003
+República Tcheca,CZE,CZ,5,0.003
+Portugal,PRT,PT,5,0.003
+Nova Zelândia,NZL,NZ,5,0.003
+Malásia,MYS,MY,4,0.003
+Peru,PER,PE,4,0.003
+Indonésia,IDN,ID,4,0.003
+Turquia,TUR,TR,4,0.003
+Romênia,ROM,RO,4,0.003
+Coréia do Sul,KOR,KR,4,0.003
+Arábia Saudita,SAU,SA,3,0.002
+Tuvalu,TUV,TV,3,0.002
+Irã,IRN,IR,3,0.002
+Filipinas,PHL,PH,3,0.002
+Paquistão,PAK,PK,3,0.002
+El Salvador,SLV,SV,3,0.002
+Luxemburgo,LUX,LU,2,0.001
+Eslováquia,SVK,SK,2,0.001
+Egito,EGY,EG,2,0.001
+Honduras,HND,HN,2,0.001
+Bangladesh,BGD,BD,2,0.001
+Líbano,LBN,LB,2,0.001
+Sérvia,SRB,RS,2,0.001
+Afeganistão,AFG,AF,2,0.001
+Vietnã,VNM,VN,2,0.001
+Dinamarca,DNK,DK,2,0.001
+Hong Kong,HKG,HK,2,0.001
+Bulgária,BGR,BG,1,0.001
+Macedônia (República Yugoslava),MKD,MK,1,0.001
+Omã,OMN,OM,1,0.001
+Palau,PLW,PW,1,0.001
+Bermudas,BMU,BM,1,0.001
+Ilhas Seychelles,SYC,SC,1,0.001
+Belize,BLZ,BZ,1,0.001
+Rússia,RUS,RU,1,0.001
+Tunísia,TUN,TN,1,0.001
+Marrocos,MAR,MA,1,0.001
+Hungria,HUN,HU,1,0.001
+Equador,ECU,EC,1,0.001
+Nigéria,NGA,NG,1,0.001
+Ilhas Virgens (Inglaterra),VGB,VG,1,0.001
+Croácia (Hrvatska),HRV,HR,1,0.001
+Trinidad and Tobago,TTO,TT,1,0.001
+Belarus,BLR,BY,1,0.001
+Sri Lanka,LKA,LK,1,0.001
+Chile,CHL,CL,1,0.001
+Costa Rica,CRI,CR,1,0.001
+Macau,MAC,MO,1,0.001
+Costa do Marfim,CIV,CI,1,0.001
+Sudão,SDN,SD,1,0.001
+Nepal,NPL,NP,1,0.001
+Antígua e Barbuda,ATG,AG,1,0.001
+Finlândia,FIN,FI,1,0.001
+Kuait,KWT,KW,1,0.001
+Porto Rico,PRI,PR,1,0.001
+Bahamas,BHS,BS,1,0.001
+Lituânia,LTU,LT,1,0.001
+Mônaco,MCO,MC,1,0.001
+Moçambique,MOZ,MZ,1,0.001
+Látvia,LVA,LV,1,0.001
+Gana,GHA,GH,1,0.001

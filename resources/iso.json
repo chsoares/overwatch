@@ -1,0 +1,2216 @@
+[
+    {
+        "ordem": 1,
+        "nome": "Afeganistão",
+        "ISO2": "AF",
+        "ISO3": "AFG",
+        "codigo": "004",
+        "artigo": "o",
+        "gentilico": "afegãs"
+    },
+    {
+        "ordem": 2,
+        "nome": "África do Sul",
+        "ISO2": "ZA",
+        "ISO3": "ZAF",
+        "codigo": "710",
+        "artigo": "a",
+        "gentilico": "sul-africanas"
+    },
+    {
+        "ordem": 3,
+        "nome": "Albânia",
+        "ISO2": "AL",
+        "ISO3": "ALB",
+        "codigo": "008",
+        "artigo": "a",
+        "gentilico": "albanesas"
+    },
+    {
+        "ordem": 4,
+        "nome": "Alemanha",
+        "ISO2": "DE",
+        "ISO3": "DEU",
+        "codigo": "276",
+        "artigo": "a",
+        "gentilico": "alemãs"
+    },
+    {
+        "ordem": 5,
+        "nome": "Andorra",
+        "ISO2": "AD",
+        "ISO3": "AND",
+        "codigo": "020",
+        "artigo": "a",
+        "gentilico": "andorranas"
+    },
+    {
+        "ordem": 6,
+        "nome": "Angola",
+        "ISO2": "AO",
+        "ISO3": "AGO",
+        "codigo": "024",
+        "artigo": "a",
+        "gentilico": "angolanas"
+    },
+    {
+        "ordem": 7,
+        "nome": "Anguilla",
+        "ISO2": "AI",
+        "ISO3": "AIA",
+        "codigo": "660",
+        "artigo": "a",
+        "gentilico": "anguillanas"
+    },
+    {
+        "ordem": 8,
+        "nome": "Antártida",
+        "ISO2": "AQ",
+        "ISO3": "ATA",
+        "codigo": "010",
+        "artigo": "a",
+        "gentilico": "antárticas"
+    },
+    {
+        "ordem": 9,
+        "nome": "Antígua e Barbuda",
+        "ISO2": "AG",
+        "ISO3": "ATG",
+        "codigo": "028",
+        "artigo": "a",
+        "gentilico": "antiguanas"
+    },
+    {
+        "ordem": 10,
+        "nome": "Antilhas Holandesas",
+        "ISO2": "AN",
+        "ISO3": "ANT",
+        "codigo": "530",
+        "artigo": "as",
+        "gentilico": "antilhanas"
+    },
+    {
+        "ordem": 11,
+        "nome": "Arábia Saudita",
+        "ISO2": "SA",
+        "ISO3": "SAU",
+        "codigo": "682",
+        "artigo": "a",
+        "gentilico": "sauditas"
+    },
+    {
+        "ordem": 12,
+        "nome": "Argélia",
+        "ISO2": "DZ",
+        "ISO3": "DZA",
+        "codigo": "012",
+        "artigo": "a",
+        "gentilico": "argelinas"
+    },
+    {
+        "ordem": 13,
+        "nome": "Argentina",
+        "ISO2": "AR",
+        "ISO3": "ARG",
+        "codigo": "032",
+        "artigo": "a",
+        "gentilico": "argentinas"
+    },
+    {
+        "ordem": 14,
+        "nome": "Armênia",
+        "ISO2": "AM",
+        "ISO3": "ARM",
+        "codigo": "51",
+        "artigo": "a",
+        "gentilico": "armênias"
+    },
+    {
+        "ordem": 15,
+        "nome": "Aruba",
+        "ISO2": "AW",
+        "ISO3": "ABW",
+        "codigo": "533",
+        "artigo": "a",
+        "gentilico": "arubanas"
+    },
+    {
+        "ordem": 16,
+        "nome": "Austrália",
+        "ISO2": "AU",
+        "ISO3": "AUS",
+        "codigo": "036",
+        "artigo": "a",
+        "gentilico": "australianas"
+    },
+    {
+        "ordem": 17,
+        "nome": "Áustria",
+        "ISO2": "AT",
+        "ISO3": "AUT",
+        "codigo": "040",
+        "artigo": "a",
+        "gentilico": "austríacas"
+    },
+    {
+        "ordem": 18,
+        "nome": "Azerbaijão",
+        "ISO2": "AZ  ",
+        "ISO3": "AZE",
+        "codigo": "31",
+        "artigo": "o",
+        "gentilico": "azerbaijanas"
+    },
+    {
+        "ordem": 19,
+        "nome": "Bahamas",
+        "ISO2": "BS",
+        "ISO3": "BHS",
+        "codigo": "044",
+        "artigo": "as",
+        "gentilico": "bahamenses"
+    },
+    {
+        "ordem": 20,
+        "nome": "Bahrein",
+        "ISO2": "BH",
+        "ISO3": "BHR",
+        "codigo": "048",
+        "artigo": "o",
+        "gentilico": "barenitas"
+    },
+    {
+        "ordem": 21,
+        "nome": "Bangladesh",
+        "ISO2": "BD",
+        "ISO3": "BGD",
+        "codigo": "050",
+        "artigo": "o",
+        "gentilico": "bangladesas"
+    },
+    {
+        "ordem": 22,
+        "nome": "Barbados",
+        "ISO2": "BB",
+        "ISO3": "BRB",
+        "codigo": "052",
+        "artigo": "os",
+        "gentilico": "barbadenses"
+    },
+    {
+        "ordem": 23,
+        "nome": "Belarus",
+        "ISO2": "BY",
+        "ISO3": "BLR",
+        "codigo": "112",
+        "artigo": "a",
+        "gentilico": "bielorrussas"
+    },
+    {
+        "ordem": 24,
+        "nome": "Bélgica",
+        "ISO2": "BE",
+        "ISO3": "BEL",
+        "codigo": "056",
+        "artigo": "a",
+        "gentilico": "belgas"
+    },
+    {
+        "ordem": 25,
+        "nome": "Belize",
+        "ISO2": "BZ",
+        "ISO3": "BLZ",
+        "codigo": "084",
+        "artigo": "o",
+        "gentilico": "belizenhas"
+    },
+    {
+        "ordem": 26,
+        "nome": "Benin",
+        "ISO2": "BJ",
+        "ISO3": "BEN",
+        "codigo": "204",
+        "artigo": "o",
+        "gentilico": "beninenses"
+    },
+    {
+        "ordem": 27,
+        "nome": "Bermudas",
+        "ISO2": "BM",
+        "ISO3": "BMU",
+        "codigo": "060",
+        "artigo": "as",
+        "gentilico": "bermudenses"
+    },
+    {
+        "ordem": 28,
+        "nome": "Bolívia",
+        "ISO2": "BO",
+        "ISO3": "BOL",
+        "codigo": "068",
+        "artigo": "a",
+        "gentilico": "bolivianas"
+    },
+    {
+        "ordem": 29,
+        "nome": "Bósnia-Herzegóvina",
+        "ISO2": "BA",
+        "ISO3": "BIH",
+        "codigo": "070",
+        "artigo": "a",
+        "gentilico": "bósnias"
+    },
+    {
+        "ordem": 30,
+        "nome": "Botsuana",
+        "ISO2": "BW",
+        "ISO3": "BWA",
+        "codigo": "072",
+        "artigo": "o",
+        "gentilico": "botsuanesas"
+    },
+    {
+        "ordem": 31,
+        "nome": "Brasil",
+        "ISO2": "BR",
+        "ISO3": "BRA",
+        "codigo": "076",
+        "artigo": "o",
+        "gentilico": "brasileiras"
+    },
+    {
+        "ordem": 32,
+        "nome": "Brunei",
+        "ISO2": "BN",
+        "ISO3": "BRN",
+        "codigo": "096",
+        "artigo": "o",
+        "gentilico": "bruneanas"
+    },
+    {
+        "ordem": 33,
+        "nome": "Bulgária",
+        "ISO2": "BG",
+        "ISO3": "BGR",
+        "codigo": "100",
+        "artigo": "a",
+        "gentilico": "búlgaras"
+    },
+    {
+        "ordem": 34,
+        "nome": "Burkina Fasso",
+        "ISO2": "BF",
+        "ISO3": "BFA",
+        "codigo": "854",
+        "artigo": "o",
+        "gentilico": "burkinenses"
+    },
+    {
+        "ordem": 35,
+        "nome": "Burundi",
+        "ISO2": "BI",
+        "ISO3": "BDI",
+        "codigo": "108",
+        "artigo": "o",
+        "gentilico": "burundinesas"
+    },
+    {
+        "ordem": 36,
+        "nome": "Butão",
+        "ISO2": "BT",
+        "ISO3": "BTN",
+        "codigo": "064",
+        "artigo": "o",
+        "gentilico": "butanesas"
+    },
+    {
+        "ordem": 37,
+        "nome": "Cabo Verde",
+        "ISO2": "CV",
+        "ISO3": "CPV",
+        "codigo": "132",
+        "artigo": "o",
+        "gentilico": "cabo-verdianas"
+    },
+    {
+        "ordem": 38,
+        "nome": "Camarões",
+        "ISO2": "CM",
+        "ISO3": "CMR",
+        "codigo": "120",
+        "artigo": "os",
+        "gentilico": "camaronesas"
+    },
+    {
+        "ordem": 39,
+        "nome": "Camboja",
+        "ISO2": "KH",
+        "ISO3": "KHM",
+        "codigo": "116",
+        "artigo": "o",
+        "gentilico": "cambojanas"
+    },
+    {
+        "ordem": 40,
+        "nome": "Canadá",
+        "ISO2": "CA",
+        "ISO3": "CAN",
+        "codigo": "124",
+        "artigo": "o",
+        "gentilico": "canadenses"
+    },
+    {
+        "ordem": 41,
+        "nome": "Cazaquistão",
+        "ISO2": "KZ",
+        "ISO3": "KAZ",
+        "codigo": "398",
+        "artigo": "o",
+        "gentilico": "cazaques"
+    },
+    {
+        "ordem": 42,
+        "nome": "Chade",
+        "ISO2": "TD",
+        "ISO3": "TCD",
+        "codigo": "148",
+        "artigo": "o",
+        "gentilico": "chadianas"
+    },
+    {
+        "ordem": 43,
+        "nome": "Chile",
+        "ISO2": "CL",
+        "ISO3": "CHL",
+        "codigo": "152",
+        "artigo": "o",
+        "gentilico": "chilenas"
+    },
+    {
+        "ordem": 44,
+        "nome": "China",
+        "ISO2": "CN",
+        "ISO3": "CHN",
+        "codigo": "156",
+        "artigo": "a",
+        "gentilico": "chinesas"
+    },
+    {
+        "ordem": 45,
+        "nome": "Chipre",
+        "ISO2": "CY",
+        "ISO3": "CYP",
+        "codigo": "196",
+        "artigo": "o",
+        "gentilico": "cipriotas"
+    },
+    {
+        "ordem": 46,
+        "nome": "Cingapura",
+        "ISO2": "SG",
+        "ISO3": "SGP",
+        "codigo": "702",
+        "artigo": "a",
+        "gentilico": "cingapurianas"
+    },
+    {
+        "ordem": 47,
+        "nome": "Colômbia",
+        "ISO2": "CO",
+        "ISO3": "COL",
+        "codigo": "170",
+        "artigo": "a",
+        "gentilico": "colombianas"
+    },
+    {
+        "ordem": 48,
+        "nome": "Congo",
+        "ISO2": "CG",
+        "ISO3": "COG",
+        "codigo": "178",
+        "artigo": "o",
+        "gentilico": "congolesas"
+    },
+    {
+        "ordem": 49,
+        "nome": "Coréia do Norte",
+        "ISO2": "KP",
+        "ISO3": "PRK",
+        "codigo": "408",
+        "artigo": "a",
+        "gentilico": "norte-coreanas"
+    },
+    {
+        "ordem": 50,
+        "nome": "Coréia do Sul",
+        "ISO2": "KR",
+        "ISO3": "KOR",
+        "codigo": "410",
+        "artigo": "a",
+        "gentilico": "sul-coreanas"
+    },
+    {
+        "ordem": 51,
+        "nome": "Costa do Marfim",
+        "ISO2": "CI",
+        "ISO3": "CIV",
+        "codigo": "384",
+        "artigo": "a",
+        "gentilico": "marfinenses"
+    },
+    {
+        "ordem": 52,
+        "nome": "Costa Rica",
+        "ISO2": "CR",
+        "ISO3": "CRI",
+        "codigo": "188",
+        "artigo": "a",
+        "gentilico": "costa-riquenhas"
+    },
+    {
+        "ordem": 53,
+        "nome": "Croácia (Hrvatska)",
+        "ISO2": "HR",
+        "ISO3": "HRV",
+        "codigo": "191",
+        "artigo": "a",
+        "gentilico": "croatas"
+    },
+    {
+        "ordem": 54,
+        "nome": "Cuba",
+        "ISO2": "CU",
+        "ISO3": "CUB",
+        "codigo": "192",
+        "artigo": "a",
+        "gentilico": "cubanas"
+    },
+    {
+        "ordem": 55,
+        "nome": "Dinamarca",
+        "ISO2": "DK",
+        "ISO3": "DNK",
+        "codigo": "208",
+        "artigo": "a",
+        "gentilico": "dinamarquesas"
+    },
+    {
+        "ordem": 56,
+        "nome": "Djibuti",
+        "ISO2": "DJ",
+        "ISO3": "DJI",
+        "codigo": "262",
+        "artigo": "o",
+        "gentilico": "djibutianas"
+    },
+    {
+        "ordem": 57,
+        "nome": "Dominica",
+        "ISO2": "DM",
+        "ISO3": "DMA",
+        "codigo": "212",
+        "artigo": "a",
+        "gentilico": "dominiquenses"
+    },
+    {
+        "ordem": 58,
+        "nome": "Egito",
+        "ISO2": "EG",
+        "ISO3": "EGY",
+        "codigo": "818",
+        "artigo": "o",
+        "gentilico": "egípcias"
+    },
+    {
+        "ordem": 59,
+        "nome": "El Salvador",
+        "ISO2": "SV",
+        "ISO3": "SLV",
+        "codigo": "222",
+        "artigo": "o",
+        "gentilico": "salvadorenhas"
+    },
+    {
+        "ordem": 60,
+        "nome": "Emirados Árabes",
+        "ISO2": "AE",
+        "ISO3": "ARE",
+        "codigo": "784",
+        "artigo": "os",
+        "gentilico": "emiradenses"
+    },
+    {
+        "ordem": 61,
+        "nome": "Equador",
+        "ISO2": "EC",
+        "ISO3": "ECU",
+        "codigo": "218",
+        "artigo": "o",
+        "gentilico": "equatorianas"
+    },
+    {
+        "ordem": 62,
+        "nome": "Eritréia",
+        "ISO2": "ER",
+        "ISO3": "ERI",
+        "codigo": "232",
+        "artigo": "a",
+        "gentilico": "eritreias"
+    },
+    {
+        "ordem": 63,
+        "nome": "Eslováquia",
+        "ISO2": "SK",
+        "ISO3": "SVK",
+        "codigo": "703",
+        "artigo": "a",
+        "gentilico": "eslovacas"
+    },
+    {
+        "ordem": 64,
+        "nome": "Eslovênia",
+        "ISO2": "SI",
+        "ISO3": "SVN",
+        "codigo": "705",
+        "artigo": "a",
+        "gentilico": "eslovenas"
+    },
+    {
+        "ordem": 65,
+        "nome": "Espanha",
+        "ISO2": "ES",
+        "ISO3": "ESP",
+        "codigo": "724",
+        "artigo": "a",
+        "gentilico": "espanholas"
+    },
+    {
+        "ordem": 66,
+        "nome": "Estados Unidos",
+        "ISO2": "US",
+        "ISO3": "USA",
+        "codigo": "840",
+        "artigo": "os",
+        "gentilico": "americanas"
+    },
+    {
+        "ordem": 67,
+        "nome": "Estônia",
+        "ISO2": "EE",
+        "ISO3": "EST",
+        "codigo": "233",
+        "artigo": "a",
+        "gentilico": "estonianas"
+    },
+    {
+        "ordem": 68,
+        "nome": "Etiópia",
+        "ISO2": "ET",
+        "ISO3": "ETH",
+        "codigo": "231",
+        "artigo": "a",
+        "gentilico": "etíopes"
+    },
+    {
+        "ordem": 69,
+        "nome": "Fiji",
+        "ISO2": "FJ",
+        "ISO3": "FJI",
+        "codigo": "242",
+        "artigo": "o",
+        "gentilico": "fijianas"
+    },
+    {
+        "ordem": 70,
+        "nome": "Filipinas",
+        "ISO2": "PH",
+        "ISO3": "PHL",
+        "codigo": "608",
+        "artigo": "as",
+        "gentilico": "filipinas"
+    },
+    {
+        "ordem": 71,
+        "nome": "Finlândia",
+        "ISO2": "FI",
+        "ISO3": "FIN",
+        "codigo": "246",
+        "artigo": "a",
+        "gentilico": "finlandesas"
+    },
+    {
+        "ordem": 72,
+        "nome": "França",
+        "ISO2": "FR",
+        "ISO3": "FRA",
+        "codigo": "250",
+        "artigo": "a",
+        "gentilico": "francesas"
+    },
+    {
+        "ordem": 73,
+        "nome": "Gabão",
+        "ISO2": "GA",
+        "ISO3": "GAB",
+        "codigo": "266",
+        "artigo": "o",
+        "gentilico": "gabonesas"
+    },
+    {
+        "ordem": 74,
+        "nome": "Gâmbia",
+        "ISO2": "GM",
+        "ISO3": "GMB",
+        "codigo": "270",
+        "artigo": "a",
+        "gentilico": "gambianas"
+    },
+    {
+        "ordem": 75,
+        "nome": "Gana",
+        "ISO2": "GH",
+        "ISO3": "GHA",
+        "codigo": "288",
+        "artigo": "o",
+        "gentilico": "ganesas"
+    },
+    {
+        "ordem": 76,
+        "nome": "Geórgia",
+        "ISO2": "GE",
+        "ISO3": "GEO",
+        "codigo": "268",
+        "artigo": "a",
+        "gentilico": "georgianas"
+    },
+    {
+        "ordem": 77,
+        "nome": "Gibraltar",
+        "ISO2": "GI",
+        "ISO3": "GIB",
+        "codigo": "292",
+        "artigo": "o",
+        "gentilico": "gibraltinas"
+    },
+    {
+        "ordem": 78,
+        "nome": "Reino Unido",
+        "ISO2": "GB",
+        "ISO3": "GBR",
+        "codigo": "826",
+        "artigo": "o",
+        "gentilico": "britânicas"
+    },
+    {
+        "ordem": 79,
+        "nome": "Granada",
+        "ISO2": "GD",
+        "ISO3": "GRD",
+        "codigo": "308",
+        "artigo": "a",
+        "gentilico": "granadinas"
+    },
+    {
+        "ordem": 80,
+        "nome": "Grécia",
+        "ISO2": "GR",
+        "ISO3": "GRC",
+        "codigo": "300",
+        "artigo": "a",
+        "gentilico": "gregas"
+    },
+    {
+        "ordem": 81,
+        "nome": "Groelândia",
+        "ISO2": "GL",
+        "ISO3": "GRL",
+        "codigo": "304",
+        "artigo": "a",
+        "gentilico": "groenlandesas"
+    },
+    {
+        "ordem": 82,
+        "nome": "Guadalupe",
+        "ISO2": "GP",
+        "ISO3": "GLP",
+        "codigo": "312",
+        "artigo": "a",
+        "gentilico": "guadalupenses"
+    },
+    {
+        "ordem": 83,
+        "nome": "Guam (Território dos Estados Unidos)",
+        "ISO2": "GU",
+        "ISO3": "GUM",
+        "codigo": "316",
+        "artigo": "o",
+        "gentilico": "guamesas"
+    },
+    {
+        "ordem": 84,
+        "nome": "Guatemala",
+        "ISO2": "GT",
+        "ISO3": "GTM",
+        "codigo": "320",
+        "artigo": "a",
+        "gentilico": "guatemaltecas"
+    },
+    {
+        "ordem": 85,
+        "nome": "Guernsey",
+        "ISO2": "G",
+        "ISO3": "GGY",
+        "codigo": "832",
+        "artigo": "o",
+        "gentilico": "jerseyenses"
+    },
+    {
+        "ordem": 86,
+        "nome": "Guiana",
+        "ISO2": "GY",
+        "ISO3": "GUY",
+        "codigo": "328",
+        "artigo": "a",
+        "gentilico": "guianenses"
+    },
+    {
+        "ordem": 87,
+        "nome": "Guiana Francesa",
+        "ISO2": "GF",
+        "ISO3": "GUF",
+        "codigo": "254",
+        "artigo": "a",
+        "gentilico": "franco-guianenses"
+    },
+    {
+        "ordem": 88,
+        "nome": "Guiné",
+        "ISO2": "GN",
+        "ISO3": "GIN",
+        "codigo": "324",
+        "artigo": "a",
+        "gentilico": "guineenses"
+    },
+    {
+        "ordem": 89,
+        "nome": "Guiné Equatorial",
+        "ISO2": "GQ",
+        "ISO3": "GNQ",
+        "codigo": "226",
+        "artigo": "a",
+        "gentilico": "equato-guineenses"
+    },
+    {
+        "ordem": 90,
+        "nome": "Guiné-Bissau",
+        "ISO2": "GW",
+        "ISO3": "GNB",
+        "codigo": "624",
+        "artigo": "a",
+        "gentilico": "guineenses"
+    },
+    {
+        "ordem": 91,
+        "nome": "Haiti",
+        "ISO2": "HT",
+        "ISO3": "HTI",
+        "codigo": "332",
+        "artigo": "o",
+        "gentilico": "haitianas"
+    },
+    {
+        "ordem": 92,
+        "nome": "Holanda",
+        "ISO2": "NL",
+        "ISO3": "NLD",
+        "codigo": "528",
+        "artigo": "a",
+        "gentilico": "holandesas"
+    },
+    {
+        "ordem": 93,
+        "nome": "Honduras",
+        "ISO2": "HN",
+        "ISO3": "HND",
+        "codigo": "340",
+        "artigo": "as",
+        "gentilico": "hondurenhas"
+    },
+    {
+        "ordem": 94,
+        "nome": "Hong Kong",
+        "ISO2": "HK",
+        "ISO3": "HKG",
+        "codigo": "344",
+        "artigo": "o",
+        "gentilico": "hong-konguesas"
+    },
+    {
+        "ordem": 95,
+        "nome": "Hungria",
+        "ISO2": "HU",
+        "ISO3": "HUN",
+        "codigo": "348",
+        "artigo": "a",
+        "gentilico": "húngaras"
+    },
+    {
+        "ordem": 96,
+        "nome": "Iêmen",
+        "ISO2": "YE",
+        "ISO3": "YEM",
+        "codigo": "887",
+        "artigo": "o",
+        "gentilico": "iemenitas"
+    },
+    {
+        "ordem": 97,
+        "nome": "Ilha Bouvet (Território da Noruega)",
+        "ISO2": "BV",
+        "ISO3": "BVT",
+        "codigo": "074",
+        "artigo": "a",
+        "gentilico": "bouvetianas"
+    },
+    {
+        "ordem": 98,
+        "nome": "Ilha do Homem",
+        "ISO2": "IM",
+        "ISO3": "IMN",
+        "codigo": "833",
+        "artigo": "a",
+        "gentilico": "manesas"
+    },
+    {
+        "ordem": 99,
+        "nome": "Ilha Natal",
+        "ISO2": "CX",
+        "ISO3": "CXR",
+        "codigo": "162",
+        "artigo": "a",
+        "gentilico": "natalinas"
+    },
+    {
+        "ordem": 100,
+        "nome": "Ilha Pitcairn",
+        "ISO2": "PN",
+        "ISO3": "PCN",
+        "codigo": "612",
+        "artigo": "a",
+        "gentilico": "pitcairnesas"
+    },
+    {
+        "ordem": 101,
+        "nome": "Ilha Reunião",
+        "ISO2": "RE",
+        "ISO3": "REU",
+        "codigo": "638",
+        "artigo": "a",
+        "gentilico": "reunionesas"
+    },
+    {
+        "ordem": 102,
+        "nome": "Ilhas Aland",
+        "ISO2": "AX",
+        "ISO3": "ALA",
+        "codigo": "248",
+        "artigo": "as",
+        "gentilico": "alandesas"
+    },
+    {
+        "ordem": 103,
+        "nome": "Ilhas Cayman",
+        "ISO2": "KY",
+        "ISO3": "CYM",
+        "codigo": "136",
+        "artigo": "as",
+        "gentilico": "caimanesas"
+    },
+    {
+        "ordem": 104,
+        "nome": "Ilhas Cocos",
+        "ISO2": "CC",
+        "ISO3": "CCK",
+        "codigo": "166",
+        "artigo": "as",
+        "gentilico": "coquenses"
+    },
+    {
+        "ordem": 105,
+        "nome": "Ilhas Comores",
+        "ISO2": "KM",
+        "ISO3": "COM",
+        "codigo": "174",
+        "artigo": "as",
+        "gentilico": "comorianas"
+    },
+    {
+        "ordem": 106,
+        "nome": "Ilhas Cook",
+        "ISO2": "CK",
+        "ISO3": "COK",
+        "codigo": "184",
+        "artigo": "as",
+        "gentilico": "cookianas"
+    },
+    {
+        "ordem": 107,
+        "nome": "Ilhas Faroes",
+        "ISO2": "FO",
+        "ISO3": "FRO",
+        "codigo": "234",
+        "artigo": "as",
+        "gentilico": "faroesas"
+    },
+    {
+        "ordem": 108,
+        "nome": "Ilhas Falkland (Malvinas)",
+        "ISO2": "FK",
+        "ISO3": "FLK",
+        "codigo": "238",
+        "artigo": "as",
+        "gentilico": "malvinenses"
+    },
+    {
+        "ordem": 109,
+        "nome": "Ilhas Geórgia do Sul e Sandwich do Sul",
+        "ISO2": "GS",
+        "ISO3": "SGS",
+        "codigo": "239",
+        "artigo": "as",
+        "gentilico": "sul-georgianas"
+    },
+    {
+        "ordem": 110,
+        "nome": "Ilhas Heard e McDonald (Território da Austrália)",
+        "ISO2": "HM",
+        "ISO3": "HMD",
+        "codigo": "334",
+        "artigo": "as",
+        "gentilico": "heardenses"
+    },
+    {
+        "ordem": 111,
+        "nome": "Ilhas Marianas do Norte",
+        "ISO2": "MP",
+        "ISO3": "MNP",
+        "codigo": "580",
+        "artigo": "as",
+        "gentilico": "norte-marianenses"
+    },
+    {
+        "ordem": 112,
+        "nome": "Ilhas Marshall",
+        "ISO2": "MH",
+        "ISO3": "MHL",
+        "codigo": "584",
+        "artigo": "as",
+        "gentilico": "marshallinas"
+    },
+    {
+        "ordem": 113,
+        "nome": "Ilhas Menores dos Estados Unidos",
+        "ISO2": "UM",
+        "ISO3": "UMI",
+        "codigo": "581",
+        "artigo": "as",
+        "gentilico": "norte-americanas"
+    },
+    {
+        "ordem": 114,
+        "nome": "Ilhas Norfolk",
+        "ISO2": "NF",
+        "ISO3": "NFK",
+        "codigo": "574",
+        "artigo": "as",
+        "gentilico": "norfolquinas"
+    },
+    {
+        "ordem": 115,
+        "nome": "Ilhas Seychelles",
+        "ISO2": "SC",
+        "ISO3": "SYC",
+        "codigo": "690",
+        "artigo": "as",
+        "gentilico": "seichelenses"
+    },
+    {
+        "ordem": 116,
+        "nome": "Ilhas Solomão",
+        "ISO2": "SB",
+        "ISO3": "SLB",
+        "codigo": "090",
+        "artigo": "as",
+        "gentilico": "salomônicas"
+    },
+    {
+        "ordem": 117,
+        "nome": "Ilhas Svalbard e Jan Mayen",
+        "ISO2": "SJ",
+        "ISO3": "SJM",
+        "codigo": "744",
+        "artigo": "as",
+        "gentilico": "svalbardenses"
+    },
+    {
+        "ordem": 118,
+        "nome": "Ilhas Tokelau",
+        "ISO2": "TK",
+        "ISO3": "TKL",
+        "codigo": "772",
+        "artigo": "as",
+        "gentilico": "tokelauenses"
+    },
+    {
+        "ordem": 119,
+        "nome": "Ilhas Turks e Caicos",
+        "ISO2": "TC",
+        "ISO3": "TCA",
+        "codigo": "796",
+        "artigo": "as",
+        "gentilico": "turco-caicenses"
+    },
+    {
+        "ordem": 120,
+        "nome": "Ilhas Virgens (Estados Unidos)",
+        "ISO2": "VI",
+        "ISO3": "VIR",
+        "codigo": "850",
+        "artigo": "as",
+        "gentilico": "virgens-americanas"
+    },
+    {
+        "ordem": 121,
+        "nome": "Ilhas Virgens (Inglaterra)",
+        "ISO2": "VG",
+        "ISO3": "VGB",
+        "codigo": "092",
+        "artigo": "as",
+        "gentilico": "virgens-britânicas"
+    },
+    {
+        "ordem": 122,
+        "nome": "Ilhas Wallis e Futuna",
+        "ISO2": "WF",
+        "ISO3": "WLF",
+        "codigo": "876",
+        "artigo": "as",
+        "gentilico": "wallis-futunianas"
+    },
+    {
+        "ordem": 123,
+        "nome": "índia",
+        "ISO2": "IN",
+        "ISO3": "IND",
+        "codigo": "356",
+        "artigo": "a",
+        "gentilico": "indianas"
+    },
+    {
+        "ordem": 124,
+        "nome": "Indonésia",
+        "ISO2": "ID",
+        "ISO3": "IDN",
+        "codigo": "360",
+        "artigo": "a",
+        "gentilico": "indonésias"
+    },
+    {
+        "ordem": 125,
+        "nome": "Irã",
+        "ISO2": "IR",
+        "ISO3": "IRN",
+        "codigo": "364",
+        "artigo": "o",
+        "gentilico": "iranianas"
+    },
+    {
+        "ordem": 126,
+        "nome": "Iraque",
+        "ISO2": "IQ",
+        "ISO3": "IRQ",
+        "codigo": "368",
+        "artigo": "o",
+        "gentilico": "iraquianas"
+    },
+    {
+        "ordem": 127,
+        "nome": "Irlanda",
+        "ISO2": "IE",
+        "ISO3": "IRL",
+        "codigo": "372",
+        "artigo": "a",
+        "gentilico": "irlandesas"
+    },
+    {
+        "ordem": 128,
+        "nome": "Islândia",
+        "ISO2": "IS",
+        "ISO3": "ISL",
+        "codigo": "352",
+        "artigo": "a",
+        "gentilico": "islandesas"
+    },
+    {
+        "ordem": 129,
+        "nome": "Israel",
+        "ISO2": "IL",
+        "ISO3": "ISR",
+        "codigo": "376",
+        "artigo": "o",
+        "gentilico": "israelenses"
+    },
+    {
+        "ordem": 130,
+        "nome": "Itália",
+        "ISO2": "IT",
+        "ISO3": "ITA",
+        "codigo": "380",
+        "artigo": "a",
+        "gentilico": "italianas"
+    },
+    {
+        "ordem": 131,
+        "nome": "Jamaica",
+        "ISO2": "JM",
+        "ISO3": "JAM",
+        "codigo": "388",
+        "artigo": "a",
+        "gentilico": "jamaicanas"
+    },
+    {
+        "ordem": 132,
+        "nome": "Japão",
+        "ISO2": "JP",
+        "ISO3": "JPN",
+        "codigo": "392",
+        "artigo": "o",
+        "gentilico": "japonesas"
+    },
+    {
+        "ordem": 133,
+        "nome": "Jersey",
+        "ISO2": "JE",
+        "ISO3": "JEY",
+        "codigo": "832",
+        "artigo": "o",
+        "gentilico": "jerseyenses"
+    },
+    {
+        "ordem": 134,
+        "nome": "Jordânia",
+        "ISO2": "JO",
+        "ISO3": "JOR",
+        "codigo": "400",
+        "artigo": "a",
+        "gentilico": "jordanianas"
+    },
+    {
+        "ordem": 135,
+        "nome": "Kênia",
+        "ISO2": "KE",
+        "ISO3": "KEN",
+        "codigo": "404",
+        "artigo": "o",
+        "gentilico": "quenianas"
+    },
+    {
+        "ordem": 136,
+        "nome": "Kiribati",
+        "ISO2": "KI",
+        "ISO3": "KIR",
+        "codigo": "296",
+        "artigo": "o",
+        "gentilico": "kiribatianas"
+    },
+    {
+        "ordem": 137,
+        "nome": "Kuait",
+        "ISO2": "KW",
+        "ISO3": "KWT",
+        "codigo": "414",
+        "artigo": "o",
+        "gentilico": "kuwaitianas"
+    },
+    {
+        "ordem": 138,
+        "nome": "Laos",
+        "ISO2": "LA",
+        "ISO3": "LAO",
+        "codigo": "418",
+        "artigo": "o",
+        "gentilico": "laosianas"
+    },
+    {
+        "ordem": 139,
+        "nome": "Látvia",
+        "ISO2": "LV",
+        "ISO3": "LVA",
+        "codigo": "428",
+        "artigo": "a",
+        "gentilico": "letonas"
+    },
+    {
+        "ordem": 140,
+        "nome": "Lesoto",
+        "ISO2": "LS",
+        "ISO3": "LSO",
+        "codigo": "426",
+        "artigo": "o",
+        "gentilico": "lesotenses"
+    },
+    {
+        "ordem": 141,
+        "nome": "Líbano",
+        "ISO2": "LB",
+        "ISO3": "LBN",
+        "codigo": "422",
+        "artigo": "o",
+        "gentilico": "libanesas"
+    },
+    {
+        "ordem": 142,
+        "nome": "Libéria",
+        "ISO2": "LR",
+        "ISO3": "LBR",
+        "codigo": "430",
+        "artigo": "a",
+        "gentilico": "liberianas"
+    },
+    {
+        "ordem": 143,
+        "nome": "Líbia",
+        "ISO2": "LY",
+        "ISO3": "LBY",
+        "codigo": "434",
+        "artigo": "a",
+        "gentilico": "líbias"
+    },
+    {
+        "ordem": 144,
+        "nome": "Liechtenstein",
+        "ISO2": "LI",
+        "ISO3": "LIE",
+        "codigo": "438",
+        "artigo": "o",
+        "gentilico": "liechtensteinenses"
+    },
+    {
+        "ordem": 145,
+        "nome": "Lituânia",
+        "ISO2": "LT",
+        "ISO3": "LTU",
+        "codigo": "440",
+        "artigo": "a",
+        "gentilico": "lituanas"
+    },
+    {
+        "ordem": 146,
+        "nome": "Luxemburgo",
+        "ISO2": "LU",
+        "ISO3": "LUX",
+        "codigo": "442",
+        "artigo": "o",
+        "gentilico": "luxemburguesas"
+    },
+    {
+        "ordem": 147,
+        "nome": "Macau",
+        "ISO2": "MO",
+        "ISO3": "MAC",
+        "codigo": "446",
+        "artigo": "o",
+        "gentilico": "macaenses"
+    },
+    {
+        "ordem": 148,
+        "nome": "Macedônia (República Yugoslava)",
+        "ISO2": "MK",
+        "ISO3": "MKD",
+        "codigo": "807",
+        "artigo": "a",
+        "gentilico": "macedônias"
+    },
+    {
+        "ordem": 149,
+        "nome": "Madagascar",
+        "ISO2": "MG",
+        "ISO3": "MDG",
+        "codigo": "450",
+        "artigo": "o",
+        "gentilico": "malgaxes"
+    },
+    {
+        "ordem": 150,
+        "nome": "Malásia",
+        "ISO2": "MY",
+        "ISO3": "MYS",
+        "codigo": "458",
+        "artigo": "a",
+        "gentilico": "malásias"
+    },
+    {
+        "ordem": 151,
+        "nome": "Malaui",
+        "ISO2": "MW",
+        "ISO3": "MWI",
+        "codigo": "454",
+        "artigo": "o",
+        "gentilico": "malauianas"
+    },
+    {
+        "ordem": 152,
+        "nome": "Maldivas",
+        "ISO2": "MV",
+        "ISO3": "MDV",
+        "codigo": "462",
+        "artigo": "as",
+        "gentilico": "maldivas"
+    },
+    {
+        "ordem": 153,
+        "nome": "Mali",
+        "ISO2": "ML",
+        "ISO3": "MLI",
+        "codigo": "466",
+        "artigo": "o",
+        "gentilico": "malianas"
+    },
+    {
+        "ordem": 154,
+        "nome": "Malta",
+        "ISO2": "MT",
+        "ISO3": "MLT",
+        "codigo": "470",
+        "artigo": "a",
+        "gentilico": "maltesas"
+    },
+    {
+        "ordem": 155,
+        "nome": "Marrocos",
+        "ISO2": "MA",
+        "ISO3": "MAR",
+        "codigo": "504",
+        "artigo": "o",
+        "gentilico": "marroquinas"
+    },
+    {
+        "ordem": 156,
+        "nome": "Martinica",
+        "ISO2": "MQ",
+        "ISO3": "MTQ",
+        "codigo": "474",
+        "artigo": "a",
+        "gentilico": "martiniquenses"
+    },
+    {
+        "ordem": 157,
+        "nome": "Maurício",
+        "ISO2": "MU",
+        "ISO3": "MUS",
+        "codigo": "480",
+        "artigo": "o",
+        "gentilico": "mauricianas"
+    },
+    {
+        "ordem": 158,
+        "nome": "Mauritânia",
+        "ISO2": "MR",
+        "ISO3": "MRT",
+        "codigo": "478",
+        "artigo": "a",
+        "gentilico": "mauritanas"
+    },
+    {
+        "ordem": 159,
+        "nome": "Mayotte",
+        "ISO2": "YT",
+        "ISO3": "MYT",
+        "codigo": "175",
+        "artigo": "o",
+        "gentilico": "maiotenses"
+    },
+    {
+        "ordem": 160,
+        "nome": "México",
+        "ISO2": "MX",
+        "ISO3": "MEX",
+        "codigo": "484",
+        "artigo": "o",
+        "gentilico": "mexicanas"
+    },
+    {
+        "ordem": 161,
+        "nome": "Micronésia",
+        "ISO2": "FM",
+        "ISO3": "FSM",
+        "codigo": "583",
+        "artigo": "a",
+        "gentilico": "micronésias"
+    },
+    {
+        "ordem": 162,
+        "nome": "Moçambique",
+        "ISO2": "MZ",
+        "ISO3": "MOZ",
+        "codigo": "508",
+        "artigo": "o",
+        "gentilico": "moçambicanas"
+    },
+    {
+        "ordem": 163,
+        "nome": "Moldova",
+        "ISO2": "MD",
+        "ISO3": "MDA",
+        "codigo": "498",
+        "artigo": "a",
+        "gentilico": "moldavas"
+    },
+    {
+        "ordem": 164,
+        "nome": "Mônaco",
+        "ISO2": "MC",
+        "ISO3": "MCO",
+        "codigo": "492",
+        "artigo": "o",
+        "gentilico": "monegascas"
+    },
+    {
+        "ordem": 165,
+        "nome": "Mongólia",
+        "ISO2": "MN",
+        "ISO3": "MNG",
+        "codigo": "496",
+        "artigo": "a",
+        "gentilico": "mongóis"
+    },
+    {
+        "ordem": 166,
+        "nome": "Montenegro",
+        "ISO2": "ME",
+        "ISO3": "MNE",
+        "codigo": "499",
+        "artigo": "o",
+        "gentilico": "montenegrinas"
+    },
+    {
+        "ordem": 167,
+        "nome": "Montserrat",
+        "ISO2": "MS",
+        "ISO3": "MSR",
+        "codigo": "500",
+        "artigo": "o",
+        "gentilico": "montserratenses"
+    },
+    {
+        "ordem": 168,
+        "nome": "Myanma",
+        "ISO2": "MM",
+        "ISO3": "MMR",
+        "codigo": "104",
+        "artigo": "o",
+        "gentilico": "birmanesas"
+    },
+    {
+        "ordem": 169,
+        "nome": "Namíbia",
+        "ISO2": "NA",
+        "ISO3": "NAM",
+        "codigo": "516",
+        "artigo": "a",
+        "gentilico": "namibianas"
+    },
+    {
+        "ordem": 170,
+        "nome": "Nauru",
+        "ISO2": "NR",
+        "ISO3": "NRU",
+        "codigo": "520",
+        "artigo": "o",
+        "gentilico": "nauruanas"
+    },
+    {
+        "ordem": 171,
+        "nome": "Nepal",
+        "ISO2": "NP",
+        "ISO3": "NPL",
+        "codigo": "524",
+        "artigo": "o",
+        "gentilico": "nepalesas"
+    },
+    {
+        "ordem": 172,
+        "nome": "Nicarágua",
+        "ISO2": "NI",
+        "ISO3": "NIC",
+        "codigo": "558",
+        "artigo": "a",
+        "gentilico": "nicaraguenses"
+    },
+    {
+        "ordem": 173,
+        "nome": "Níger",
+        "ISO2": "NE",
+        "ISO3": "NER",
+        "codigo": "562",
+        "artigo": "o",
+        "gentilico": "nigerianas"
+    },
+    {
+        "ordem": 174,
+        "nome": "Nigéria",
+        "ISO2": "NG",
+        "ISO3": "NGA",
+        "codigo": "566",
+        "artigo": "a",
+        "gentilico": "nigerianas"
+    },
+    {
+        "ordem": 175,
+        "nome": "Niue",
+        "ISO2": "NU",
+        "ISO3": "NIU",
+        "codigo": "570",
+        "artigo": "o",
+        "gentilico": "niuanas"
+    },
+    {
+        "ordem": 176,
+        "nome": "Noruega",
+        "ISO2": "NO",
+        "ISO3": "NOR",
+        "codigo": "578",
+        "artigo": "a",
+        "gentilico": "norueguesas"
+    },
+    {
+        "ordem": 177,
+        "nome": "Nova Caledônia",
+        "ISO2": "NC",
+        "ISO3": "NCL",
+        "codigo": "540",
+        "artigo": "a",
+        "gentilico": "neo-caledônias"
+    },
+    {
+        "ordem": 178,
+        "nome": "Nova Zelândia",
+        "ISO2": "NZ",
+        "ISO3": "NZL",
+        "codigo": "554",
+        "artigo": "a",
+        "gentilico": "neozelandesas"
+    },
+    {
+        "ordem": 179,
+        "nome": "Omã",
+        "ISO2": "OM",
+        "ISO3": "OMN",
+        "codigo": "512",
+        "artigo": "o",
+        "gentilico": "omanenses"
+    },
+    {
+        "ordem": 180,
+        "nome": "Palau",
+        "ISO2": "PW",
+        "ISO3": "PLW",
+        "codigo": "585",
+        "artigo": "o",
+        "gentilico": "palauenses"
+    },
+    {
+        "ordem": 181,
+        "nome": "Panamá",
+        "ISO2": "PA",
+        "ISO3": "PAN",
+        "codigo": "591",
+        "artigo": "o",
+        "gentilico": "panamenhas"
+    },
+    {
+        "ordem": 182,
+        "nome": "Papua-Nova Guiné",
+        "ISO2": "PG",
+        "ISO3": "PNG",
+        "codigo": "598",
+        "artigo": "a",
+        "gentilico": "papuas"
+    },
+    {
+        "ordem": 183,
+        "nome": "Paquistão",
+        "ISO2": "PK",
+        "ISO3": "PAK",
+        "codigo": "586",
+        "artigo": "o",
+        "gentilico": "paquistanesas"
+    },
+    {
+        "ordem": 184,
+        "nome": "Paraguai",
+        "ISO2": "PY",
+        "ISO3": "PRY",
+        "codigo": "600",
+        "artigo": "o",
+        "gentilico": "paraguaias"
+    },
+    {
+        "ordem": 185,
+        "nome": "Peru",
+        "ISO2": "PE",
+        "ISO3": "PER",
+        "codigo": "604",
+        "artigo": "o",
+        "gentilico": "peruanas"
+    },
+    {
+        "ordem": 186,
+        "nome": "Polinésia Francesa",
+        "ISO2": "PF",
+        "ISO3": "PYF",
+        "codigo": "258",
+        "artigo": "a",
+        "gentilico": "polinésias"
+    },
+    {
+        "ordem": 187,
+        "nome": "Polônia",
+        "ISO2": "PL",
+        "ISO3": "POL",
+        "codigo": "616",
+        "artigo": "a",
+        "gentilico": "polonesas"
+    },
+    {
+        "ordem": 188,
+        "nome": "Porto Rico",
+        "ISO2": "PR",
+        "ISO3": "PRI",
+        "codigo": "630",
+        "artigo": "o",
+        "gentilico": "porto-riquenhas"
+    },
+    {
+        "ordem": 189,
+        "nome": "Portugal",
+        "ISO2": "PT",
+        "ISO3": "PRT",
+        "codigo": "620",
+        "artigo": "o",
+        "gentilico": "portuguesas"
+    },
+    {
+        "ordem": 190,
+        "nome": "Qatar",
+        "ISO2": "QA",
+        "ISO3": "QAT",
+        "codigo": "634",
+        "artigo": "o",
+        "gentilico": "catarianas"
+    },
+    {
+        "ordem": 191,
+        "nome": "Quirguistão",
+        "ISO2": "KG",
+        "ISO3": "KGZ",
+        "codigo": "417",
+        "artigo": "o",
+        "gentilico": "quirguizes"
+    },
+    {
+        "ordem": 192,
+        "nome": "República Centro-Africana",
+        "ISO2": "CF",
+        "ISO3": "CAF",
+        "codigo": "140",
+        "artigo": "a",
+        "gentilico": "centro-africanas"
+    },
+    {
+        "ordem": 193,
+        "nome": "República Democrática do Congo",
+        "ISO2": "CD",
+        "ISO3": "COD",
+        "codigo": "180",
+        "artigo": "a",
+        "gentilico": "congolesas"
+    },
+    {
+        "ordem": 194,
+        "nome": "República Dominicana",
+        "ISO2": "DO",
+        "ISO3": "DOM",
+        "codigo": "214",
+        "artigo": "a",
+        "gentilico": "dominicanas"
+    },
+    {
+        "ordem": 195,
+        "nome": "República Tcheca",
+        "ISO2": "CZ",
+        "ISO3": "CZE",
+        "codigo": "203",
+        "artigo": "a",
+        "gentilico": "tchecas"
+    },
+    {
+        "ordem": 196,
+        "nome": "Romênia",
+        "ISO2": "RO",
+        "ISO3": "ROM",
+        "codigo": "642",
+        "artigo": "a",
+        "gentilico": "romenas"
+    },
+    {
+        "ordem": 197,
+        "nome": "Ruanda",
+        "ISO2": "RW",
+        "ISO3": "RWA",
+        "codigo": "646",
+        "artigo": "o",
+        "gentilico": "ruandesas"
+    },
+    {
+        "ordem": 198,
+        "nome": "Rússia",
+        "ISO2": "RU",
+        "ISO3": "RUS",
+        "codigo": "643",
+        "artigo": "a",
+        "gentilico": "russas"
+    },
+    {
+        "ordem": 199,
+        "nome": "Saara Ocidental",
+        "ISO2": "EH",
+        "ISO3": "ESH",
+        "codigo": "732",
+        "artigo": "o",
+        "gentilico": "saarauis"
+    },
+    {
+        "ordem": 200,
+        "nome": "Saint Vincente e Granadinas",
+        "ISO2": "VC",
+        "ISO3": "VCT",
+        "codigo": "670",
+        "artigo": "o",
+        "gentilico": "são-vicentinas"
+    },
+    {
+        "ordem": 201,
+        "nome": "Samoa Americana",
+        "ISO2": "AS",
+        "ISO3": "ASM",
+        "codigo": "016",
+        "artigo": "a",
+        "gentilico": "samoanas-americanas"
+    },
+    {
+        "ordem": 202,
+        "nome": "Samoa Ocidental",
+        "ISO2": "WS",
+        "ISO3": "WSM",
+        "codigo": "882",
+        "artigo": "a",
+        "gentilico": "samoanas"
+    },
+    {
+        "ordem": 203,
+        "nome": "San Marino",
+        "ISO2": "SM",
+        "ISO3": "SMR",
+        "codigo": "674",
+        "artigo": "o",
+        "gentilico": "são-marinenses"
+    },
+    {
+        "ordem": 204,
+        "nome": "Santa Helena",
+        "ISO2": "SH",
+        "ISO3": "SHN",
+        "codigo": "654",
+        "artigo": "a",
+        "gentilico": "santa-helenenses"
+    },
+    {
+        "ordem": 205,
+        "nome": "Santa Lúcia",
+        "ISO2": "LC",
+        "ISO3": "LCA",
+        "codigo": "662",
+        "artigo": "a",
+        "gentilico": "santa-lucienses"
+    },
+    {
+        "ordem": 206,
+        "nome": "São Bartolomeu",
+        "ISO2": "BL",
+        "ISO3": "BLM",
+        "codigo": "652",
+        "artigo": "o",
+        "gentilico": "bartolomeenses"
+    },
+    {
+        "ordem": 207,
+        "nome": "São Cristóvão e Névis",
+        "ISO2": "KN",
+        "ISO3": "KNA",
+        "codigo": "659",
+        "artigo": "o",
+        "gentilico": "cristovenses"
+    },
+    {
+        "ordem": 208,
+        "nome": "São Martim",
+        "ISO2": "MF",
+        "ISO3": "MAF",
+        "codigo": "663",
+        "artigo": "o",
+        "gentilico": "são-martinenses"
+    },
+    {
+        "ordem": 209,
+        "nome": "São Tomé e Príncipe",
+        "ISO2": "ST",
+        "ISO3": "STP",
+        "codigo": "678",
+        "artigo": "o",
+        "gentilico": "são-tomenses"
+    },
+    {
+        "ordem": 210,
+        "nome": "Senegal",
+        "ISO2": "SN",
+        "ISO3": "SEN",
+        "codigo": "686",
+        "artigo": "o",
+        "gentilico": "senegalesas"
+    },
+    {
+        "ordem": 211,
+        "nome": "Serra Leoa",
+        "ISO2": "SL",
+        "ISO3": "SLE",
+        "codigo": "694",
+        "artigo": "a",
+        "gentilico": "serraleonesas"
+    },
+    {
+        "ordem": 212,
+        "nome": "Sérvia",
+        "ISO2": "RS",
+        "ISO3": "SRB",
+        "codigo": "688",
+        "artigo": "a",
+        "gentilico": "sérvia"
+    },
+    {
+        "ordem": 213,
+        "nome": "Síria",
+        "ISO2": "SY",
+        "ISO3": "SYR",
+        "codigo": "760",
+        "artigo": "a",
+        "gentilico": "sírias"
+    },
+    {
+        "ordem": 214,
+        "nome": "Somália",
+        "ISO2": "SO",
+        "ISO3": "SOM",
+        "codigo": "706",
+        "artigo": "a",
+        "gentilico": "somalianas"
+    },
+    {
+        "ordem": 215,
+        "nome": "Sri Lanka",
+        "ISO2": "LK",
+        "ISO3": "LKA",
+        "codigo": "144",
+        "artigo": "a",
+        "gentilico": "srilankenses"
+    },
+    {
+        "ordem": 216,
+        "nome": "St. Pierre and Miquelon",
+        "ISO2": "PM",
+        "ISO3": "SPM",
+        "codigo": "666",
+        "artigo": "o",
+        "gentilico": "saint-pierre-et-miquelonnais"
+    },
+    {
+        "ordem": 217,
+        "nome": "Suazilândia",
+        "ISO2": "SZ",
+        "ISO3": "SWZ",
+        "codigo": "748",
+        "artigo": "a",
+        "gentilico": "suazi"
+    },
+    {
+        "ordem": 218,
+        "nome": "Sudão",
+        "ISO2": "SD",
+        "ISO3": "SDN",
+        "codigo": "736",
+        "artigo": "o",
+        "gentilico": "sudaneses"
+    },
+    {
+        "ordem": 219,
+        "nome": "Suécia",
+        "ISO2": "SE",
+        "ISO3": "SWE",
+        "codigo": "752",
+        "artigo": "a",
+        "gentilico": "suecas"
+    },
+    {
+        "ordem": 220,
+        "nome": "Suíça",
+        "ISO2": "CH",
+        "ISO3": "CHE",
+        "codigo": "756",
+        "artigo": "a",
+        "gentilico": "suíças"
+    },
+    {
+        "ordem": 221,
+        "nome": "Suriname",
+        "ISO2": "SR",
+        "ISO3": "SUR",
+        "codigo": "740",
+        "artigo": "a",
+        "gentilico": "surinamenses"
+    },
+    {
+        "ordem": 222,
+        "nome": "Tadjiquistão",
+        "ISO2": "TJ",
+        "ISO3": "TJK",
+        "codigo": "762",
+        "artigo": "o",
+        "gentilico": "tadjiques"
+    },
+    {
+        "ordem": 223,
+        "nome": "Tailândia",
+        "ISO2": "TH",
+        "ISO3": "THA",
+        "codigo": "764",
+        "artigo": "a",
+        "gentilico": "tailandesas"
+    },
+    {
+        "ordem": 224,
+        "nome": "Taiwan",
+        "ISO2": "TW",
+        "ISO3": "TWN",
+        "codigo": "158",
+        "artigo": "a",
+        "gentilico": "taiwanesas"
+    },
+    {
+        "ordem": 225,
+        "nome": "Tanzânia",
+        "ISO2": "TZ",
+        "ISO3": "TZA",
+        "codigo": "834",
+        "artigo": "a",
+        "gentilico": "tanzanianas"
+    },
+    {
+        "ordem": 226,
+        "nome": "Território Britânico do Oceano índico",
+        "ISO2": "IO",
+        "ISO3": "IOT",
+        "codigo": "086",
+        "artigo": "o",
+        "gentilico": "britânico-indiano"
+    },
+    {
+        "ordem": 227,
+        "nome": "Territórios do Sul da França",
+        "ISO2": "TF",
+        "ISO3": "ATF",
+        "codigo": "260",
+        "artigo": "os",
+        "gentilico": "franceses"
+    },
+    {
+        "ordem": 228,
+        "nome": "Territórios Palestinos Ocupados",
+        "ISO2": "PS",
+        "ISO3": "PSE",
+        "codigo": "275",
+        "artigo": "os",
+        "gentilico": "palestinos"
+    },
+    {
+        "ordem": 229,
+        "nome": "Timor Leste",
+        "ISO2": "TP",
+        "ISO3": "TMP",
+        "codigo": "626",
+        "artigo": "o",
+        "gentilico": "timorense"
+    },
+    {
+        "ordem": 230,
+        "nome": "Togo",
+        "ISO2": "TG",
+        "ISO3": "TGO",
+        "codigo": "768",
+        "artigo": "o",
+        "gentilico": "togolesas"
+    },
+    {
+        "ordem": 231,
+        "nome": "Tonga",
+        "ISO2": "TO",
+        "ISO3": "TON",
+        "codigo": "776",
+        "artigo": "o",
+        "gentilico": "tonganesas"
+    },
+    {
+        "ordem": 232,
+        "nome": "Trinidad and Tobago",
+        "ISO2": "TT",
+        "ISO3": "TTO",
+        "codigo": "780",
+        "artigo": "o",
+        "gentilico": "trinitárias"
+    },
+    {
+        "ordem": 233,
+        "nome": "Tunísia",
+        "ISO2": "TN",
+        "ISO3": "TUN",
+        "codigo": "788",
+        "artigo": "a",
+        "gentilico": "tunisianas"
+    },
+    {
+        "ordem": 234,
+        "nome": "Turcomenistão",
+        "ISO2": "TM",
+        "ISO3": "TKM",
+        "codigo": "795",
+        "artigo": "o",
+        "gentilico": "turquemenas"
+    },
+    {
+        "ordem": 235,
+        "nome": "Turquia",
+        "ISO2": "TR",
+        "ISO3": "TUR",
+        "codigo": "792",
+        "artigo": "a",
+        "gentilico": "turcas"
+    },
+    {
+        "ordem": 236,
+        "nome": "Tuvalu",
+        "ISO2": "TV",
+        "ISO3": "TUV",
+        "codigo": "798",
+        "artigo": "o",
+        "gentilico": "tuvaluanas"
+    },
+    {
+        "ordem": 237,
+        "nome": "Ucrânia",
+        "ISO2": "UA",
+        "ISO3": "UKR",
+        "codigo": "804",
+        "artigo": "a",
+        "gentilico": "ucranianas"
+    },
+    {
+        "ordem": 238,
+        "nome": "Uganda",
+        "ISO2": "UG",
+        "ISO3": "UGA",
+        "codigo": "800",
+        "artigo": "o",
+        "gentilico": "ugandesas"
+    },
+    {
+        "ordem": 239,
+        "nome": "Uruguai",
+        "ISO2": "UY",
+        "ISO3": "URY",
+        "codigo": "858",
+        "artigo": "o",
+        "gentilico": "uruguaias"
+    },
+    {
+        "ordem": 240,
+        "nome": "Uzbequistão",
+        "ISO2": "UZ",
+        "ISO3": "UZB",
+        "codigo": "860",
+        "artigo": "o",
+        "gentilico": "uzbeques"
+    },
+    {
+        "ordem": 241,
+        "nome": "Vanuatu",
+        "ISO2": "VU",
+        "ISO3": "VUT",
+        "codigo": "548",
+        "artigo": "o",
+        "gentilico": "vanuatuenses"
+    },
+    {
+        "ordem": 242,
+        "nome": "Vaticano",
+        "ISO2": "VA",
+        "ISO3": "VAT",
+        "codigo": "336",
+        "artigo": "o",
+        "gentilico": "vaticanas"
+    },
+    {
+        "ordem": 243,
+        "nome": "Venezuela",
+        "ISO2": "VE",
+        "ISO3": "VEN",
+        "codigo": "862",
+        "artigo": "a",
+        "gentilico": "venezuelanas"
+    },
+    {
+        "ordem": 244,
+        "nome": "Vietnã",
+        "ISO2": "VN",
+        "ISO3": "VNM",
+        "codigo": "704",
+        "artigo": "o",
+        "gentilico": "vietnamitas"
+    },
+    {
+        "ordem": 245,
+        "nome": "Zâmbia",
+        "ISO2": "ZM",
+        "ISO3": "ZMB",
+        "codigo": "894",
+        "artigo": "a",
+        "gentilico": "zambianas"
+    },
+    {
+        "ordem": 246,
+        "nome": "Zimbábue",
+        "ISO2": "ZW",
+        "ISO3": "ZWE",
+        "codigo": "716",
+        "artigo": "o",
+        "gentilico": "zimbabuanas"
+    }
+]

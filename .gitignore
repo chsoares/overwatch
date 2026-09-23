@@ -1,0 +1,48 @@
+# Diretórios de Output e Cache
+output/*
+export/*
+logs/*
+__pycache__/
+.ipynb_checkpoints/
+.pytest_cache/
+
+# Jupyter Notebooks
+*.ipynb
+
+# Ambiente Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+*.egg-info/
+dist/
+build/
+
+# Dados
+#data/*.csv
+#data/*.json
+data/backups/
+data/extra/
+
+# Segredos
+.streamlit/secrets.toml
+
+# Configurações efêmeras
+config.yaml
+
+# IDEs e Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs e Temporários
+*.log
+*.tmp
+.coverage
+htmlcov/

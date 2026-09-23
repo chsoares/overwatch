@@ -1,0 +1,138 @@
+country,ISO3,ISO2,counts,proportion
+Estados Unidos,USA,US,2511,0.446
+Reino Unido,GBR,GB,263,0.047
+Canadá,CAN,CA,257,0.046
+Alemanha,DEU,DE,180,0.032
+Itália,ITA,IT,146,0.026
+índia,IND,IN,146,0.026
+França,FRA,FR,122,0.022
+Brasil,BRA,BR,114,0.02
+Austrália,AUS,AU,110,0.02
+Espanha,ESP,ES,101,0.018
+Israel,ISR,IL,61,0.011
+Bélgica,BEL,BE,58,0.01
+Suíça,CHE,CH,54,0.01
+Emirados Árabes,ARE,AE,54,0.01
+México,MEX,MX,53,0.009
+Japão,JPN,JP,45,0.008
+Holanda,NLD,NL,44,0.008
+Suécia,SWE,SE,37,0.007
+Argentina,ARG,AR,33,0.006
+Polônia,POL,PL,32,0.006
+África do Sul,ZAF,ZA,28,0.005
+Cingapura,SGP,SG,28,0.005
+Áustria,AUT,AT,27,0.005
+Taiwan,TWN,TW,27,0.005
+Tailândia,THA,TH,25,0.004
+Irlanda,IRL,IE,24,0.004
+Indonésia,IDN,ID,22,0.004
+Colômbia,COL,CO,22,0.004
+Arábia Saudita,SAU,SA,21,0.004
+China,CHN,CN,20,0.004
+Noruega,NOR,NO,20,0.004
+Romênia,ROM,RO,19,0.003
+Malásia,MYS,MY,18,0.003
+Nova Zelândia,NZL,NZ,18,0.003
+Coréia do Sul,KOR,KR,18,0.003
+República Tcheca,CZE,CZ,17,0.003
+Peru,PER,PE,17,0.003
+Turquia,TUR,TR,15,0.003
+Vietnã,VNM,VN,13,0.002
+Grécia,GRC,GR,12,0.002
+Dinamarca,DNK,DK,12,0.002
+Hong Kong,HKG,HK,12,0.002
+Geórgia,GEO,GE,11,0.002
+Egito,EGY,EG,11,0.002
+Portugal,PRT,PT,10,0.002
+Chile,CHL,CL,10,0.002
+Luxemburgo,LUX,LU,9,0.002
+Filipinas,PHL,PH,8,0.001
+Paquistão,PAK,PK,8,0.001
+Bangladesh,BGD,BD,8,0.001
+Venezuela,VEN,VE,7,0.001
+Omã,OMN,OM,6,0.001
+El Salvador,SLV,SV,6,0.001
+Líbano,LBN,LB,6,0.001
+Hungria,HUN,HU,6,0.001
+Croácia (Hrvatska),HRV,HR,6,0.001
+Costa Rica,CRI,CR,6,0.001
+Chipre,CYP,CY,5,0.001
+Rússia,RUS,RU,5,0.001
+Irã,IRN,IR,5,0.001
+Jordânia,JOR,JO,5,0.001
+Mongólia,MNG,MN,5,0.001
+Bulgária,BGR,BG,5,0.001
+Equador,ECU,EC,5,0.001
+Bolívia,BOL,BO,5,0.001
+Tunísia,TUN,TN,5,0.001
+Zimbábue,ZWE,ZW,4,0.001
+Porto Rico,PRI,PR,4,0.001
+Eslováquia,SVK,SK,4,0.001
+Costa do Marfim,CIV,CI,4,0.001
+Sudão,SDN,SD,4,0.001
+Tuvalu,TUV,TV,3,0.001
+Lituânia,LTU,LT,3,0.001
+Islândia,ISL,IS,3,0.001
+Guatemala,GTM,GT,3,0.001
+Argélia,DZA,DZ,3,0.001
+Afeganistão,AFG,AF,3,0.001
+Uruguai,URY,UY,3,0.001
+Ilhas Virgens (Inglaterra),VGB,VG,3,0.001
+República Dominicana,DOM,DO,3,0.001
+Jamaica,JAM,JM,3,0.001
+Nigéria,NGA,NG,3,0.001
+Kênia,KEN,KE,3,0.001
+Qatar,QAT,QA,3,0.001
+Kuait,KWT,KW,3,0.001
+Trinidad and Tobago,TTO,TT,2,0.0
+Bahamas,BHS,BS,2,0.0
+Macedônia (República Yugoslava),MKD,MK,2,0.0
+Uzbequistão,UZB,UZ,2,0.0
+Ilhas Seychelles,SYC,SC,2,0.0
+Paraguai,PRY,PY,2,0.0
+Camarões,CMR,CM,2,0.0
+Maurício,MUS,MU,2,0.0
+Bermudas,BMU,BM,2,0.0
+Honduras,HND,HN,2,0.0
+Sérvia,SRB,RS,2,0.0
+Nepal,NPL,NP,2,0.0
+Gana,GHA,GH,2,0.0
+Látvia,LVA,LV,2,0.0
+Zâmbia,ZMB,ZM,2,0.0
+Líbia,LBY,LY,2,0.0
+Fiji,FJI,FJ,2,0.0
+Belarus,BLR,BY,2,0.0
+Aruba,ABW,AW,2,0.0
+Panamá,PAN,PA,1,0.0
+Belize,BLZ,BZ,1,0.0
+Palau,PLW,PW,1,0.0
+Jersey,JEY,JE,1,0.0
+Armênia,ARM,AM,1,0.0
+Djibuti,DJI,DJ,1,0.0
+Dominica,DMA,DM,1,0.0
+Mônaco,MCO,MC,1,0.0
+Finlândia,FIN,FI,1,0.0
+Antígua e Barbuda,ATG,AG,1,0.0
+Marrocos,MAR,MA,1,0.0
+Macau,MAC,MO,1,0.0
+Sri Lanka,LKA,LK,1,0.0
+Moçambique,MOZ,MZ,1,0.0
+Myanma,MMR,MM,1,0.0
+Bósnia-Herzegóvina,BIH,BA,1,0.0
+Senegal,SEN,SN,1,0.0
+Angola,AGO,AO,1,0.0
+Malta,MLT,MT,1,0.0
+Tanzânia,TZA,TZ,1,0.0
+Síria,SYR,SY,1,0.0
+Ilhas Faroes,FRO,FO,1,0.0
+Etiópia,ETH,ET,1,0.0
+Gabão,GAB,GA,1,0.0
+Barbados,BRB,BB,1,0.0
+Mauritânia,MRT,MR,1,0.0
+Tadjiquistão,TJK,TJ,1,0.0
+Ucrânia,UKR,UA,1,0.0
+Botsuana,BWA,BW,1,0.0
+Camboja,KHM,KH,1,0.0
+Anguilla,AIA,AI,1,0.0
+Laos,LAO,LA,1,0.0
+Estônia,EST,EE,1,0.0
