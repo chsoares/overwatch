@@ -66,6 +66,9 @@ class VulnIngestor:
         # Configurar APIs
         self.nvd_key = os.getenv("NVD_API_KEY")
         self.github_token = os.getenv("GITHUB_TOKEN")
+        # Marcado como True quando a chave NVD retorna 404 (inválida). Uma vez
+        # detectado, passamos a consultar sem chave para não insistir no 404.
+        self._nvd_key_invalid = False
         
         # Atualizar base de exploits
         self._update_exploitdb()
@@ -108,33 +111,95 @@ class VulnIngestor:
         self.logger.success(f"Dados do KEV processados: {len(kev_df)} vulnerabilidades")
         return kev_df.sort_values(by='dateAdded')
 
-    def check_cvss(self, cve_id: str) -> Optional[float]:
+    def _search_cvss_once(self, cve_id: str, use_key: bool) -> Optional[float]:
         """
-        Verifica o CVSS Score de uma vulnerabilidade.
-        
-        Args:
-            cve_id: ID da vulnerabilidade
-            
+        Executa uma única consulta de CVSS no NVD.
+
+        A chave NVD só é enviada quando ``use_key`` é True. Sem chave não se
+        passa ``delay`` (o nvdlib exige a chave para aceitar um delay custom e
+        aplica seu próprio default de 6s).
+
         Returns:
-            float: CVSS score ou None em caso de erro
+            float: CVSS score, ou None quando o NVD não retorna resultado
+        """
+        if use_key:
+            results = nvdlib.searchCVE(cveId=cve_id, key=self.nvd_key, delay=1)
+        else:
+            results = nvdlib.searchCVE(cveId=cve_id)
+
+        if not results:
+            self.logger.debug(f"{cve_id}: NVD não retornou resultado.")
+            return None
+
+        cvss = results[0].score
+        score = cvss[1]
+        severity = cvss[2]
+        self.logger.debug(f"{cve_id}: {severity} ({score})")
+        return score
+
+    def _search_cvss_with_retries(self, cve_id: str, use_key: bool) -> Optional[float]:
+        """
+        Consulta o CVSS com retry/backoff exponencial para erros transitórios.
+
+        Um HTTP 404 não é transitório (chave inválida ou CVE ausente), então
+        não gera novas tentativas.
         """
         MAX_RETRIES = 5
         fail_count = 0
-        
+
         while fail_count < MAX_RETRIES:
             try:
-                cvss = nvdlib.searchCVE(cveId=cve_id, key=self.nvd_key, delay=1)[0].score
-                score = cvss[1]
-                severity = cvss[2]
-                self.logger.debug(f"{cve_id}: {severity} ({score})")
-                return score
+                return self._search_cvss_once(cve_id, use_key=use_key)
+            except requests.exceptions.HTTPError as e:
+                status = getattr(getattr(e, "response", None), "status_code", None)
+                if status == 404:
+                    self.logger.error(f"{cve_id}: NVD retornou HTTP 404. Pulando sem novas tentativas.")
+                    return None
+                self.logger.warning(f"{cve_id} falhou. Tentando novamente... ({fail_count + 1}/{MAX_RETRIES})")
+                fail_count += 1
+                sleep(3 ** fail_count)  # Delay exponencial
             except Exception:
                 self.logger.warning(f"{cve_id} falhou. Tentando novamente... ({fail_count + 1}/{MAX_RETRIES})")
                 fail_count += 1
                 sleep(3 ** fail_count)  # Delay exponencial
-        
+
         self.logger.error(f"{cve_id} falhou {MAX_RETRIES} vezes. Pulando...")
         return None
+
+    def check_cvss(self, cve_id: str) -> Optional[float]:
+        """
+        Verifica o CVSS Score de uma vulnerabilidade.
+
+        Se uma chave NVD estiver configurada, tenta primeiro com ela. Um HTTP
+        404 indica chave inválida: nesse caso a chave é marcada como inválida e
+        a mesma consulta é repetida sem chave (sem backoff). Depois disso, as
+        próximas consultas já vão direto para o modo sem chave. Erros
+        transitórios (rede/timeout/5xx) continuam usando o retry com backoff.
+
+        Args:
+            cve_id: ID da vulnerabilidade
+
+        Returns:
+            float: CVSS score ou None em caso de erro
+        """
+        # Sem chave configurada ou chave já sabidamente inválida: modo keyless.
+        if self._nvd_key_invalid or not self.nvd_key:
+            return self._search_cvss_with_retries(cve_id, use_key=False)
+
+        try:
+            return self._search_cvss_once(cve_id, use_key=True)
+        except requests.exceptions.HTTPError as e:
+            status = getattr(getattr(e, "response", None), "status_code", None)
+            if status == 404:
+                self._nvd_key_invalid = True
+                self.logger.warning(
+                    "Chave NVD inválida (HTTP 404). Continuando sem chave "
+                    "(delay padrão de 6s do nvdlib)."
+                )
+                return self._search_cvss_with_retries(cve_id, use_key=False)
+            return self._search_cvss_with_retries(cve_id, use_key=True)
+        except Exception:
+            return self._search_cvss_with_retries(cve_id, use_key=True)
 
     def check_epss(self, cve_id: str) -> Optional[float]:
         """
