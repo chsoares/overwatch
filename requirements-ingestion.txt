@@ -5,5 +5,4 @@ dnspython
 python-dotenv
 trafilatura
 nvdlib
-cve-searchsploit
 pytest

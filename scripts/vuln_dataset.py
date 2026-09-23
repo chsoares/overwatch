@@ -8,19 +8,16 @@ Suporta processamento em lotes para grandes volumes de dados.
 """
 
 import argparse
-import io
 import logging
 import math
 import os
 import sys
 import time
-from contextlib import redirect_stdout
 from datetime import datetime
 from pathlib import Path
 from time import sleep
 from typing import List, Optional, Tuple
 
-import cve_searchsploit as ss
 import nvdlib
 import pandas as pd
 import requests
@@ -30,8 +27,10 @@ from dotenv import load_dotenv
 if __name__ == "__main__":
     project_root = Path(__file__).parent.parent
     sys.path.insert(0, str(project_root))
+    from scripts.exploitdb import download_index
     from scripts.logger_config import setup_logger
 else:
+    from .exploitdb import download_index
     from .logger_config import setup_logger
 
 from core.settings import DATA_DIR
@@ -72,22 +71,15 @@ class VulnIngestor:
         self._update_exploitdb()
 
     def _update_exploitdb(self):
-        """Atualiza a base de dados do ExploitDB."""
+        """Carrega o índice CVE -> exploit do ExploitDB (files_exploits.csv)."""
         try:
-            with redirect_stdout(io.StringIO()):
-                self.logger.info("Atualizando base de exploits...")
-                ss.update_db()
+            self.logger.info("Atualizando base de exploits...")
+            self.exploit_index = download_index()
             self.logger.success("Base de exploits atualizada com sucesso!")
         except Exception as e:
             self.logger.warning(f"ExploitDB não disponível ({str(e)})")
             self.logger.warning("Continuando sem verificação do ExploitDB...")
-            
-            # Sobrescrever função check_exploitdb para sempre retornar 'No' durante os testes
-            def check_exploitdb(cve_id):
-                self.logger.debug(f"{cve_id}: Não (ExploitDB indisponível no Windows)")
-                return 'No'
-            
-            self.check_exploitdb = check_exploitdb
+            self.exploit_index = {}
 
     def process_kev_data(self) -> pd.DataFrame:
         """
@@ -175,8 +167,8 @@ class VulnIngestor:
         Returns:
             str: 'Yes' se encontrado, 'No' caso contrário
         """
-        data = ss.edbid_from_cve(cve_id)
-        if bool(data):
+        data = self.exploit_index.get(cve_id.upper(), [])
+        if data:
             self.logger.debug(f"{cve_id}: Sim (ExploitDB - IDs: {', '.join(map(str, data))})")
             return 'Yes'
         self.logger.debug(f"{cve_id}: Não (ExploitDB)")
