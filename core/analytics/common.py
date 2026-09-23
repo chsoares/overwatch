@@ -124,9 +124,54 @@ def monthly_axis_end(end, period):
     return end + pd.DateOffset(months=1)
 
 
+def _add_months(timestamp, months):
+    """Shift ``timestamp`` by ``months``, pinning the day to the first.
+
+    Pure year/month arithmetic (no ``DateOffset``) so the result never depends
+    on the pandas version. Time-of-day and sub-second precision are preserved.
+    """
+    total = timestamp.year * 12 + (timestamp.month - 1) + months
+    year, month = divmod(total, 12)
+    return timestamp.replace(year=year, month=month + 1, day=1)
+
+
+def _month_start_sequence(start, end):
+    """Month-start timestamps equivalent to ``date_range(freq="MS")`` on pandas 2.
+
+    pandas 2.3 and pandas 3.x disagree on inclusive-end handling for an
+    anchored ``MS`` range whose boundaries carry a time-of-day (the goldens
+    were captured on 2.3.3). The legacy semantics are reproduced explicitly:
+
+    * if ``start`` is not a month start, roll it *forward* to the next month
+      start and leave ``end`` untouched (this mirrors pandas 2's ``if``/``elif``
+      in ``_generate_range``);
+    * otherwise, if ``end`` is not a month start, roll it *back* to its month
+      start;
+    * emit month starts while ``cur <= end``.
+
+    ``MonthBegin.is_on_offset`` only inspects the day-of-month, so the
+    time-of-day is never a factor in the roll decisions -- only in the final
+    comparison.
+    """
+    start = pd.Timestamp(start)
+    end = pd.Timestamp(end)
+
+    if start.day != 1:
+        start = _add_months(start, 1)
+    elif end.day != 1:
+        end = end.replace(day=1)
+
+    months = []
+    current = start
+    while current <= end:
+        months.append(current)
+        current = _add_months(current, 1)
+    return months
+
+
 def month_axis(start, end, include_year=False):
     """Build the legacy ``all_months`` frame from a monthly date range."""
-    index = pd.date_range(start=start, end=end, freq="MS")
+    index = pd.DatetimeIndex(_month_start_sequence(start, end))
     data = {
         "published": index,
         "month": index.month.map(month_name),
