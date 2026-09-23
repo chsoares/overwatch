@@ -20,3 +20,10 @@ def test_env_defaults(monkeypatch):
 def test_classifier_enabled_with_key(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "x")
     assert settings.classifier_enabled() is True
+
+
+def test_openrouter_model_default_and_override(monkeypatch):
+    monkeypatch.delenv("OPENROUTER_MODEL", raising=False)
+    assert settings.openrouter_model() == settings.DEFAULT_OPENROUTER_MODEL
+    monkeypatch.setenv("OPENROUTER_MODEL", "vendor/some-model")
+    assert settings.openrouter_model() == "vendor/some-model"

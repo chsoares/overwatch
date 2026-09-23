@@ -41,6 +41,7 @@ class OpenRouterClient:
     def __init__(self):
         self.api_key = os.getenv("OPENROUTER_API_KEY")
         self.base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+        self.model = os.getenv("OPENROUTER_MODEL", "google/gemini-2.5-flash-lite")
         self.max_retries = int(os.getenv("MAX_RETRIES", 3))
         self.retry_delay = int(os.getenv("RETRY_DELAY", 2))
         self.cost_per_request = 0.0001  # Custo estimado por request em USD
@@ -65,7 +66,7 @@ class OpenRouterClient:
         }
 
         data = {
-            "model": "google/gemini-2.0-flash-001",
+            "model": self.model,
             "messages": [
                 {
                     "role": "user",
@@ -88,6 +89,10 @@ class OpenRouterClient:
                     raise SystemicClassifierError("OpenRouter API credits exhausted")
                 elif response.status_code == 401:  # Unauthorized
                     raise SystemicClassifierError("OpenRouter API key is invalid")
+                elif response.status_code == 404:  # Model unavailable
+                    raise SystemicClassifierError(
+                        f"OpenRouter model not found: {self.model}"
+                    )
                 response.raise_for_status()
 
                 # Log de custos e tempo

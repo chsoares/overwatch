@@ -7,10 +7,12 @@ import os
 
 from core.paths import BASE_DIR, DATA_DIR, LOGS_DIR, RESOURCES_DIR
 
+DEFAULT_OPENROUTER_MODEL = "google/gemini-2.5-flash-lite"
+
 __all__ = [
     "BASE_DIR", "DATA_DIR", "LOGS_DIR", "RESOURCES_DIR",
     "nvd_api_key", "openrouter_api_key", "openrouter_base_url",
-    "classifier_enabled",
+    "openrouter_model", "classifier_enabled",
 ]
 
 
@@ -24,6 +26,10 @@ def openrouter_api_key():
 
 def openrouter_base_url():
     return os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+
+
+def openrouter_model():
+    return os.getenv("OPENROUTER_MODEL", DEFAULT_OPENROUTER_MODEL)
 
 
 def classifier_enabled():
