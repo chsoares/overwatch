@@ -345,16 +345,36 @@ class RansomIngestor:
             # Não propagar o erro para permitir que o processo continue
 
     @staticmethod
+    def _parse_api_datetime(series: pd.Series) -> pd.Series:
+        """
+        Parseia colunas de data da API de forma robusta.
+
+        A resposta da API v2 (via pd.read_json) pode vir como coluna
+        object com tipos/formatos mistos: elementos já convertidos em
+        Timestamp e strings ISO-8601 com ou sem offset/microssegundos.
+        Chamar pd.to_datetime sem `format` faz o pandas inferir o
+        formato do primeiro elemento e coercer os demais para NaT.
+
+        Normalizamos cada elemento para string e usamos ISO8601, que
+        cobre "YYYY-MM-DD HH:MM:SS.ffffff" e "...+00:00". `utc=True`
+        garante dtype datetime64[ns, UTC] consistente mesmo com offsets
+        mistos, permitindo o `.dt` posterior.
+        """
+        return pd.to_datetime(
+            series.astype(str), errors="coerce", format="ISO8601", utc=True
+        )
+
+    @staticmethod
     def _to_naive_utc(series: pd.Series) -> pd.Series:
         """
         Normaliza timestamps para datetime64[ns] naive em UTC.
 
-        A API v2 retorna datas ISO-8601 com offset UTC (ex.:
-        "2026-02-28T21:02:36.060651+00:00"), o que produz dtype tz-aware
-        e quebra comparações com Timestamps naive. Valores naive são
-        interpretados como UTC, preservando o wall-clock existente.
+        Parseia as strings primeiro (ver `_parse_api_datetime`) e depois
+        remove o timezone, evitando o problema de formatos mistos.
+        Valores naive são interpretados como UTC, preservando o
+        wall-clock existente.
         """
-        return pd.to_datetime(series, errors="coerce", utc=True).dt.tz_localize(None)
+        return RansomIngestor._parse_api_datetime(series).dt.tz_localize(None)
 
     def _transform_api_v2_response(self, df: pd.DataFrame) -> pd.DataFrame:
         """
