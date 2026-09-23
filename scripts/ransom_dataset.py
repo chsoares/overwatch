@@ -344,6 +344,18 @@ class RansomIngestor:
             logger.error(f"Erro ao calcular métricas de classificação: {str(e)}")
             # Não propagar o erro para permitir que o processo continue
 
+    @staticmethod
+    def _to_naive_utc(series: pd.Series) -> pd.Series:
+        """
+        Normaliza timestamps para datetime64[ns] naive em UTC.
+
+        A API v2 retorna datas ISO-8601 com offset UTC (ex.:
+        "2026-02-28T21:02:36.060651+00:00"), o que produz dtype tz-aware
+        e quebra comparações com Timestamps naive. Valores naive são
+        interpretados como UTC, preservando o wall-clock existente.
+        """
+        return pd.to_datetime(series, errors="coerce", utc=True).dt.tz_localize(None)
+
     def _transform_api_v2_response(self, df: pd.DataFrame) -> pd.DataFrame:
         """
         Transforma a resposta da API v2 para o formato esperado pelo código.
@@ -434,9 +446,9 @@ class RansomIngestor:
             for col in ["post_title", "website", "group_name"]:
                 df[col] = df[col].str.strip()
 
-            # Normalizar datas
+            # Normalizar datas (sempre naive em UTC)
             for col in ["published", "discovered"]:
-                df[col] = pd.to_datetime(df[col], errors="coerce")
+                df[col] = self._to_naive_utc(df[col])
 
             # Remover registros com datas inválidas
             valid_dates_mask = df["discovered"].notna() & df["published"].notna()
@@ -653,7 +665,7 @@ class RansomIngestor:
         """
         try:
             # Converter discovered para datetime
-            ransom_df["discovered"] = pd.to_datetime(ransom_df["discovered"])
+            ransom_df["discovered"] = self._to_naive_utc(ransom_df["discovered"])
 
             # Ordenar por discovered
             ransom_df = ransom_df.sort_values("discovered", ascending=True)
@@ -672,7 +684,7 @@ class RansomIngestor:
                 return ransom_df
 
             # Converter discovered dos novos dados
-            new_data["discovered"] = pd.to_datetime(new_data["discovered"])
+            new_data["discovered"] = self._to_naive_utc(new_data["discovered"])
 
             # Identificar registros novos
             new_records = new_data[new_data["discovered"] >= last_discovered]
@@ -767,8 +779,8 @@ class RansomIngestor:
         Returns:
             DataFrame regenerado com as colunas de classificação e o schema final
         """
-        all_data["published"] = pd.to_datetime(all_data["published"])
-        all_data["discovered"] = pd.to_datetime(all_data["discovered"])
+        all_data["published"] = self._to_naive_utc(all_data["published"])
+        all_data["discovered"] = self._to_naive_utc(all_data["discovered"])
         all_data = self.classify_sectors(all_data)
         all_data = all_data.sort_values("discovered", ascending=True)
         all_data = all_data[self.columns]
