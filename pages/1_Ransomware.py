@@ -40,6 +40,17 @@ _HEATMAP_COLORSCALE = [
     [0.95, "rgb(25, 100, 25)"],
     [1.0, "rgb(0, 60, 0)"],
 ]
+_HEATMAP_COLORSCALE_COUNTRY = [
+    [0.0, "rgb(255, 255, 255)"],
+    [0.1, "rgb(235, 238, 250)"],
+    [0.2, "rgb(205, 215, 245)"],
+    [0.4, "rgb(160, 180, 235)"],
+    [0.6, "rgb(110, 140, 220)"],
+    [0.8, "rgb(65, 105, 225)"],
+    [0.95, "rgb(72, 61, 139)"],
+    [1.0, "rgb(45, 35, 95)"],
+]
+_COLORWAY_COUNTRY = ["orangered", "darkorange", "darkred", "yellowgreen", "teal"]
 
 st.set_page_config(
     page_title="overwatch / ransomware",
@@ -64,7 +75,7 @@ def period_is_current(period, today):
     return period["end"] >= today
 
 
-def group_activity_chart(activity):
+def group_activity_chart(activity, colorway=None):
     activity = activity.copy()
     activity["month_label"] = month_labels(activity["date"])
     fig = go.Figure()
@@ -96,6 +107,8 @@ def group_activity_chart(activity):
             rangemode="tozero",
         ),
     )
+    if colorway is not None:
+        fig.update_layout(colorway=colorway)
     return fig
 
 
@@ -139,7 +152,7 @@ def heatmap_bounds(period):
     return pd.Timestamp(start), pd.Timestamp(period["end"])
 
 
-def daily_heatmap_chart(heatmap, period):
+def daily_heatmap_chart(heatmap, period, colorscale=None):
     heatmap = heatmap.copy()
     heatmap["date"] = pd.to_datetime(heatmap["date"])
     heatmap["date_formatted"] = heatmap["date"].dt.strftime("%d/%m/%Y")
@@ -175,7 +188,7 @@ def daily_heatmap_chart(heatmap, period):
             x=matrix.columns,
             y=_WEEKDAYS,
             customdata=np.dstack((date_matrix, weekday_matrix)),
-            colorscale=_HEATMAP_COLORSCALE,
+            colorscale=_HEATMAP_COLORSCALE if colorscale is None else colorscale,
             zauto=False,
             zmin=0,
             zmax=zmax,
@@ -382,18 +395,20 @@ def render_group_activity(world, country, name):
         "Evolução do número de ataques anunciados pelos grupos mais ativos "
         "no período ao longo dos últimos meses"
     )
-    st.write("###### No mundo")
-    if world.empty:
-        st.info("Sem dados para o período")
-    else:
-        with st.container(border=True):
+    with st.container(border=True):
+        st.write("###### No mundo")
+        if world.empty:
+            st.info("Sem dados para o período")
+        else:
             st.plotly_chart(group_activity_chart(world))
-    st.write(f"###### Em {name}")
-    if country.empty:
-        st.info("Sem dados para o período")
-    else:
-        with st.container(border=True):
-            st.plotly_chart(group_activity_chart(country))
+    with st.container(border=True):
+        st.write(f"###### Em {name}")
+        if country.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                group_activity_chart(country, colorway=_COLORWAY_COUNTRY)
+            )
 
 
 def render_active_groups(world, country, name):
@@ -478,18 +493,22 @@ def render_daily_heatmap(world, country, period, name):
     st.caption(
         "Quantidade de ataques por dia da semana ao longo dos últimos meses"
     )
-    st.write("###### No mundo")
-    if world.empty:
-        st.info("Sem dados para o período")
-    else:
-        with st.container(border=True):
+    with st.container(border=True):
+        st.write("###### No mundo")
+        if world.empty:
+            st.info("Sem dados para o período")
+        else:
             st.plotly_chart(daily_heatmap_chart(world, period))
-    st.write(f"###### Em {name}")
-    if country.empty:
-        st.info("Sem dados para o período")
-    else:
-        with st.container(border=True):
-            st.plotly_chart(daily_heatmap_chart(country, period))
+    with st.container(border=True):
+        st.write(f"###### Em {name}")
+        if country.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                daily_heatmap_chart(
+                    country, period, colorscale=_HEATMAP_COLORSCALE_COUNTRY
+                )
+            )
 
 
 def render_historical_series(series, name):
