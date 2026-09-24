@@ -59,6 +59,12 @@ _COLORWAY_COUNTRY = [
     "#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
     "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF",
 ]
+_COLOR_WORLD = "firebrick"
+_COLOR_SELECTION = "black"
+_COLORWAY_HISTORY_COUNTRY = [
+    "darkslateblue", "darkorange", "teal", "rebeccapurple", "royalblue",
+    "yellowgreen", "midnightblue", "darkgreen", "orangered", "darkred",
+]
 
 st.set_page_config(
     page_title="overwatch / ransomware",
@@ -345,7 +351,7 @@ def historical_series_multi_chart(series, name_fn):
             x=labels,
             y=series["world_attacks"],
             name="Mundo",
-            line=dict(color="firebrick", width=3),
+            line=dict(color=_COLOR_WORLD, width=3),
             mode="lines+markers",
         ),
         secondary_y=False,
@@ -355,7 +361,7 @@ def historical_series_multi_chart(series, name_fn):
             x=labels,
             y=series["selection_attacks"],
             name="países selecionados",
-            line=dict(color="green", width=3, dash="dash"),
+            line=dict(color=_COLOR_SELECTION, width=3, dash="dash"),
             mode="lines+markers",
         ),
         secondary_y=True,
@@ -368,7 +374,10 @@ def historical_series_multi_chart(series, name_fn):
                 y=series[code],
                 name=label,
                 line=dict(
-                    color=_COLORWAY_COUNTRY[index % len(_COLORWAY_COUNTRY)], width=2
+                    color=_COLORWAY_HISTORY_COUNTRY[
+                        index % len(_COLORWAY_HISTORY_COUNTRY)
+                    ],
+                    width=2,
                 ),
                 mode="lines+markers",
                 hovertemplate="<b>%{x}</b><br>" + label
@@ -397,14 +406,14 @@ def historical_series_multi_chart(series, name_fn):
         showgrid=True,
         gridcolor="lightgray",
         gridwidth=0.5,
-        title_font=dict(color="firebrick"),
+        title_font=dict(color=_COLOR_WORLD),
         range=[0, y1_max],
     )
     fig.update_yaxes(
         title_text="Incidentes nos países selecionados",
         secondary_y=True,
         showgrid=False,
-        title_font=dict(color="green"),
+        title_font=dict(color=_COLOR_SELECTION),
         range=[0, y2_max],
     )
     return fig
@@ -459,6 +468,8 @@ def victims_with_country(data, period, victims, iso_list):
     if len(iso_list) < 2 or victims.empty:
         return victims
     current, _, _ = filter_periods(data, period)
+    if not current.index.is_unique or not victims.index.isin(current.index).all():
+        return victims
     display = victims.copy()
     display.insert(1, "País", current.loc[display.index, "country"].map(country_name))
     return display

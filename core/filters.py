@@ -66,6 +66,7 @@ def country_widget(key, default="BR"):
         "Países", labels, default=default_labels[:1], key=f"{key}_country"
     )
     if not chosen:
+        st.sidebar.warning("Nenhum país selecionado; usando Brasil.")
         chosen = default_labels[:1]
     return [options[label] for label in chosen]
 
