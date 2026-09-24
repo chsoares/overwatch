@@ -169,6 +169,16 @@ def test_ransomware_page_runs_without_exception():
     _assert_month_labels_lowercase_pt(app)
 
 
+def test_ransomware_page_has_world_and_country_panels():
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.run()
+    assert not app.exception, [e.value for e in app.exception]
+    markdown = "\n".join(m.value for m in app.markdown)
+    assert "No mundo" in markdown
+    assert "Em Brasil" in markdown
+
+
 def test_filter_dataset_treats_query_as_literal_text():
     """Metacharacter queries must not reach the regex engine.
 

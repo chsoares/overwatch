@@ -376,37 +376,53 @@ def render_groups(world_groups, country_groups, name):
                 )
 
 
-def render_group_activity(activity):
+def render_group_activity(world, country, name):
     st.subheader("Evolução das atividades dos grupos")
     st.caption(
         "Evolução do número de ataques anunciados pelos grupos mais ativos "
-        "mundialmente no período ao longo dos últimos meses"
+        "no período ao longo dos últimos meses"
     )
-    if activity.empty:
+    st.write("###### No mundo")
+    if world.empty:
         st.info("Sem dados para o período")
-        return
-    with st.container(border=True):
-        st.plotly_chart(group_activity_chart(activity))
+    else:
+        with st.container(border=True):
+            st.plotly_chart(group_activity_chart(world))
+    st.write(f"###### Em {name}")
+    if country.empty:
+        st.info("Sem dados para o período")
+    else:
+        with st.container(border=True):
+            st.plotly_chart(group_activity_chart(country))
 
 
-def render_active_groups(active):
+def render_active_groups(world, country, name):
     st.subheader("Grupos em atividade")
     st.caption(
-        "Evolução do número de grupos distintos em atividade no mundo "
+        "Evolução do número de grupos distintos em atividade "
         "ao longo dos últimos meses"
     )
-    if active.empty:
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### No mundo")
+        _plot_active_groups(world)
+    with col2:
+        st.write(f"###### Em {name}")
+        _plot_active_groups(country)
+
+
+def _plot_active_groups(active):
+    if active.empty or active["active_groups"].sum() == 0:
         st.info("Sem dados para o período")
         return
     mean_active = active["active_groups"].mean()
     labels = month_labels(active["date"])
-    with st.container(border=True):
-        st.plotly_chart(
-            line_with_mean(labels, active["active_groups"], "Grupos ativos",
-                           "rebeccapurple", mean=mean_active, mean_color="plum",
-                           hover="Grupos: %{y}<extra></extra>",
-                           y_range=[0, mean_active * 1.6], height=300),
-        )
+    st.plotly_chart(
+        line_with_mean(labels, active["active_groups"], "Grupos ativos",
+                       "rebeccapurple", mean=mean_active, mean_color="plum",
+                       hover="Grupos: %{y}<extra></extra>",
+                       y_range=[0, mean_active * 1.6], height=300),
+    )
 
 
 def render_countries(countries):
@@ -457,16 +473,23 @@ def render_sectors(world_sectors, country_sectors, name):
                 )
 
 
-def render_daily_heatmap(heatmap, period):
+def render_daily_heatmap(world, country, period, name):
     st.subheader("Distribuição diária dos ataques")
     st.caption(
         "Quantidade de ataques por dia da semana ao longo dos últimos meses"
     )
-    if heatmap.empty:
+    st.write("###### No mundo")
+    if world.empty:
         st.info("Sem dados para o período")
-        return
-    with st.container(border=True):
-        st.plotly_chart(daily_heatmap_chart(heatmap, period))
+    else:
+        with st.container(border=True):
+            st.plotly_chart(daily_heatmap_chart(world, period))
+    st.write(f"###### Em {name}")
+    if country.empty:
+        st.info("Sem dados para o período")
+    else:
+        with st.container(border=True):
+            st.plotly_chart(daily_heatmap_chart(country, period))
 
 
 def render_historical_series(series, name):
@@ -498,12 +521,15 @@ try:
     world_groups = ransom.top_groups(data, period, iso2=None)
     country_groups = ransom.top_groups(data, period, iso2=iso2)
     group_activity = ransom.monthly_group_activity(data, period)
+    group_activity_country = ransom.monthly_group_activity(data, period, iso2=iso2)
     active_groups = ransom.monthly_active_groups(data, period)
+    active_groups_country = ransom.monthly_active_groups(data, period, iso2=iso2)
     countries = ransom.countries(data, period)
     world_sectors = ransom.world_sectors(data, period)
     country_sectors = ransom.country_sectors(data, period, iso2)
     victims = ransom.victims_table(data, period, iso2)
     heatmap = ransom.daily_heatmap(data, period)
+    heatmap_country = ransom.daily_heatmap(data, period, iso2=iso2)
 except EmptyPeriodError:
     st.warning(
         "Não há dados para o período selecionado. "
@@ -531,10 +557,10 @@ with tab_dashboard:
     render_groups(world_groups, country_groups, name)
 
     st.write("")
-    render_group_activity(group_activity)
+    render_group_activity(group_activity, group_activity_country, name)
 
     st.write("")
-    render_active_groups(active_groups)
+    render_active_groups(active_groups, active_groups_country, name)
 
     st.write("")
     render_countries(countries)
@@ -546,7 +572,7 @@ with tab_dashboard:
     render_sectors(world_sectors, country_sectors, name)
 
     st.write("")
-    render_daily_heatmap(heatmap, period)
+    render_daily_heatmap(heatmap, heatmap_country, period, name)
 
     st.write("")
     render_historical_series(historical, name)
