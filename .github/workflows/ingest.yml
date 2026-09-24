@@ -2,7 +2,7 @@ name: ingest
 
 on:
   schedule:
-    - cron: "0 12 * * *"   # 09:00 America/Sao_Paulo
+    - cron: "0 12 * * *"   # 09:00 America/Sao_Paulo, daily (ransom + vuln)
   workflow_dispatch:
 
 permissions:
@@ -18,15 +18,36 @@ jobs:
           python-version: "3.11"
       - name: Install dependencies
         run: pip install -r requirements-ingestion.txt
-      - name: Run collectors
+
+      - name: Collect ransomware
+        continue-on-error: true
+        timeout-minutes: 120
         env:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          LOG_LEVEL: DEBUG
+        run: python scripts/ransom_dataset.py
+
+      - name: Collect vulnerabilities
+        continue-on-error: true
+        timeout-minutes: 60
+        env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
           LOG_LEVEL: DEBUG
+        run: python scripts/vuln_dataset.py
+
+      - name: Collect email security (weekly)
+        # Runs on Sundays (UTC weekday 7) or on a manual dispatch.
+        timeout-minutes: 90
+        env:
+          LOG_LEVEL: DEBUG
         run: |
-          python scripts/ransom_dataset.py
-          python scripts/vuln_dataset.py
-          python scripts/mailsec.py
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "$(date -u +%u)" = "7" ]; then
+            echo "Running mailsec collector"
+            python scripts/mailsec.py
+          else
+            echo "Skipping mailsec (runs weekly on Sundays)"
+          fi
+
       - name: Commit data
         run: |
           git config user.name  "overwatch-bot"
@@ -38,8 +59,9 @@ jobs:
             git commit -m "Update ransom, vuln and mailsec datasets: $(date -u +%F)"
             git push
           fi
-      - name: Upload logs on failure
-        if: failure()
+
+      - name: Upload logs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ingestion-logs
