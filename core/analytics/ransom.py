@@ -302,8 +302,10 @@ def monthly_attacks(df, period, iso2="BR"):
     )
 
 
-def daily_heatmap(df, period):
-    """Legacy ``analyze_daily`` dashboard slice."""
+def daily_heatmap(df, period, iso2=None):
+    """Legacy ``analyze_daily`` dashboard slice (global or per country)."""
+    if iso2 is not None:
+        df = df[df["country"] == iso2]
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
 
@@ -371,9 +373,12 @@ def top_groups(df, period, iso2=None):
     return _top_groups_frame(current)
 
 
-def monthly_group_activity(df, period):
-    """Legacy ``analyze_groups`` monthly activity of the top groups."""
+def monthly_group_activity(df, period, iso2=None):
+    """Legacy ``analyze_groups`` monthly activity of the top groups (global or per country)."""
     current, _, monthly_data = filter_periods(df, period)
+    if iso2 is not None:
+        current = current[current["country"] == iso2]
+        monthly_data = monthly_data[monthly_data["country"] == iso2]
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
     require_data(monthly_data, period)
@@ -435,9 +440,11 @@ def monthly_group_activity(df, period):
     return dashboard_data[["date", "group_name", "attacks"]]
 
 
-def monthly_active_groups(df, period):
-    """Legacy ``analyze_groups`` unique active groups per month."""
+def monthly_active_groups(df, period, iso2=None):
+    """Legacy ``analyze_groups`` unique active groups per month (global or per country)."""
     _, _, monthly_data = filter_periods(df, period)
+    if iso2 is not None:
+        monthly_data = monthly_data[monthly_data["country"] == iso2]
     require_data(monthly_data, period)
     monthly_data = monthly_data.copy()
     monthly_data["year"] = monthly_data["published"].dt.year
