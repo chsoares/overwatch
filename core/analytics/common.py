@@ -224,6 +224,26 @@ def translate_sector(sector):
     return _sectors().get(sector, sector)
 
 
+def normalize_iso2(value):
+    """Normalize a country selection to a list of ISO2 codes.
+
+    Accepts a single code (``"BR"``), a list/tuple of codes, or an empty
+    value (``None``/``""``/``[]``), always returning a list.
+    """
+    if not value:
+        return []
+    if isinstance(value, str):
+        return [value]
+    return list(value)
+
+
+def selection_label(iso_list, name_fn):
+    """Human label for a selection: the country name when unique, else all."""
+    if len(iso_list) == 1:
+        return name_fn(iso_list[0])
+    return "países selecionados"
+
+
 def has_country_data(data, iso2):
     """Legacy ``_validate_country_data``: does ``data`` hold rows for ``iso2``?"""
     if data.empty:
