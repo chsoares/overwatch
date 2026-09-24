@@ -382,6 +382,9 @@ def render_group_activity(activity):
         "Evolução do número de ataques anunciados pelos grupos mais ativos "
         "mundialmente no período ao longo dos últimos meses"
     )
+    if activity.empty:
+        st.info("Sem dados para o período")
+        return
     with st.container(border=True):
         st.plotly_chart(group_activity_chart(activity))
 
@@ -392,6 +395,9 @@ def render_active_groups(active):
         "Evolução do número de grupos distintos em atividade no mundo "
         "ao longo dos últimos meses"
     )
+    if active.empty:
+        st.info("Sem dados para o período")
+        return
     mean_active = active["active_groups"].mean()
     labels = month_labels(active["date"])
     with st.container(border=True):
@@ -456,6 +462,9 @@ def render_daily_heatmap(heatmap, period):
     st.caption(
         "Quantidade de ataques por dia da semana ao longo dos últimos meses"
     )
+    if heatmap.empty:
+        st.info("Sem dados para o período")
+        return
     with st.container(border=True):
         st.plotly_chart(daily_heatmap_chart(heatmap, period))
 

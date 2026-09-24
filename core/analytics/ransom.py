@@ -304,8 +304,6 @@ def monthly_attacks(df, period, iso2="BR"):
 
 def daily_heatmap(df, period, iso2=None):
     """Legacy ``analyze_daily`` dashboard slice (global or per country)."""
-    if iso2 is not None:
-        df = df[df["country"] == iso2]
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
 
@@ -326,6 +324,10 @@ def daily_heatmap(df, period, iso2=None):
     selected = require_data(
         df[(df["published"] >= start) & (df["published"] <= end)], period
     )
+    if iso2 is not None:
+        selected = selected[selected["country"] == iso2]
+    if selected.empty:
+        return pd.DataFrame(columns=["date", "day", "week", "count"])
     daily_counts = (
         selected["published"]
         .dt.floor("d")
@@ -376,12 +378,14 @@ def top_groups(df, period, iso2=None):
 def monthly_group_activity(df, period, iso2=None):
     """Legacy ``analyze_groups`` monthly activity of the top groups (global or per country)."""
     current, _, monthly_data = filter_periods(df, period)
-    if iso2 is not None:
-        current = current[current["country"] == iso2]
-        monthly_data = monthly_data[monthly_data["country"] == iso2]
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
     require_data(monthly_data, period)
+    if iso2 is not None:
+        current = current[current["country"] == iso2]
+        monthly_data = monthly_data[monthly_data["country"] == iso2]
+    if monthly_data.empty:
+        return pd.DataFrame(columns=["date", "group_name", "attacks"])
 
     monthly_data = monthly_data.copy()
     monthly_data["year"] = monthly_data["published"].dt.year
@@ -443,9 +447,11 @@ def monthly_group_activity(df, period, iso2=None):
 def monthly_active_groups(df, period, iso2=None):
     """Legacy ``analyze_groups`` unique active groups per month (global or per country)."""
     _, _, monthly_data = filter_periods(df, period)
+    require_data(monthly_data, period)
     if iso2 is not None:
         monthly_data = monthly_data[monthly_data["country"] == iso2]
-    require_data(monthly_data, period)
+    if monthly_data.empty:
+        return pd.DataFrame(columns=["date", "active_groups"])
     monthly_data = monthly_data.copy()
     monthly_data["year"] = monthly_data["published"].dt.year
     monthly_data["sigla"] = monthly_data["published"].dt.month.map(month_abbr)
