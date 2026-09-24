@@ -76,3 +76,45 @@ def test_victims_table_list_union():
     both = ransom.victims_table(df, PERIOD, ["BR", "US"])
     assert set(both.columns) == {"Vítima", "Setor", "Grupo", "Data do anúncio"}
     assert len(both) >= len(ransom.victims_table(df, PERIOD, "BR"))
+
+
+def test_monthly_attacks_by_country_columns_and_total():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.monthly_attacks_by_country(df, PERIOD, ["BR", "US"])
+    assert list(result.columns) == ["date", "BR", "US"]
+    expected_br = len(df[(df["country"] == "BR") & (df["published"].dt.year == 2024)])
+    assert result["BR"].sum() == expected_br
+
+
+def test_monthly_attacks_by_country_matches_monthly_attacks():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.monthly_attacks_by_country(df, PERIOD, ["BR", "US"])
+    combined = ransom.monthly_attacks(df, PERIOD, ["BR", "US"])
+    per_month = (result["BR"] + result["US"]).reset_index(drop=True)
+    assert per_month.equals(combined["country_attacks"].reset_index(drop=True))
+
+
+def test_countries_selected_only_selected_and_total():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.countries_selected(df, PERIOD, ["BR", "US"])
+    assert set(result["ISO2"]).issubset({"BR", "US"})
+    period_rows = df[
+        (df["country"].isin(["BR", "US"])) & (df["published"].dt.year == 2024)
+    ]
+    assert result["counts"].sum() == len(period_rows)
+
+
+def test_historical_series_multi_columns_and_world():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.historical_series_multi(df, PERIOD, ["BR", "US"])
+    assert {"world_attacks", "selection_attacks", "BR", "US"}.issubset(result.columns)
+    world = ransom.historical_series(df, PERIOD, iso2=None)
+    assert result["world_attacks"].reset_index(drop=True).equals(
+        world["world_attacks"].reset_index(drop=True)
+    )
+
+
+def test_historical_series_multi_selection_is_sum():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.historical_series_multi(df, PERIOD, ["BR", "US"])
+    assert (result["selection_attacks"] == result["BR"] + result["US"]).all()

@@ -127,6 +127,26 @@ def historical_series(df, period, iso2="BR", today=None):
     )
 
 
+def historical_series_multi(df, period, iso_list, today=None):
+    """World series + selection-summed series + one series per selected country.
+
+    Columns: ``date``, ``world_attacks``, ``selection_attacks``, then one column
+    per ISO2 code (in the order given).
+    """
+    codes = normalize_iso2(iso_list)
+    world = historical_series(df, period, iso2=None, today=today)
+    result = pd.DataFrame({
+        "date": world["date"],
+        "world_attacks": world["world_attacks"],
+    })
+    selection = historical_series(df, period, iso2=codes, today=today)
+    result["selection_attacks"] = selection["country_attacks"]
+    for code in codes:
+        single = historical_series(df, period, iso2=[code], today=today)
+        result[code] = single["country_attacks"]
+    return result
+
+
 def overview(df, period, iso2="BR"):
     """Legacy ``analyze_overview`` comparison table."""
     current, previous, _ = filter_periods(df, period)
@@ -305,6 +325,36 @@ def monthly_attacks(df, period, iso2="BR"):
             + all_months["published"].dt.year.astype(str),
         }
     )
+
+
+def monthly_attacks_by_country(df, period, iso_list):
+    """Monthly attack counts, one column per selected country.
+
+    Returns a DataFrame with ``date`` plus one column per ISO2 code (in the
+    order given), each holding that country's monthly counts over the same
+    month axis as ``monthly_attacks``.
+    """
+    _, _, monthly_data = filter_periods(df, period)
+    require_data(monthly_data, period)
+    codes = normalize_iso2(iso_list)
+    monthly_data = monthly_data.copy()
+    monthly_data["year"] = monthly_data["published"].dt.year
+    monthly_data["month"] = monthly_data["published"].dt.month.map(month_name)
+    monthly_data["sigla"] = monthly_data["published"].dt.month.map(month_abbr)
+    all_months = month_axis(
+        monthly_data["published"].min(),
+        monthly_axis_end(monthly_data["published"].max(), period),
+        include_year=True,
+    )
+    result = {"date": all_months["published"]}
+    for code in codes:
+        subset = monthly_data[monthly_data["country"] == code]
+        counts = subset.groupby(["year", "month", "sigla"]).size().reset_index(name=code)
+        merged = all_months[["year", "month", "sigla"]].merge(
+            counts, how="left", on=["year", "month", "sigla"]
+        ).fillna(0)
+        result[code] = merged[code]
+    return pd.DataFrame(result)
 
 
 def daily_heatmap(df, period, iso2=None):
@@ -500,6 +550,24 @@ def countries(df, period):
     country_counts["proportion"] = (
         country_counts["counts"] / total_attacks
     ).round(3)
+    return country_counts
+
+
+def countries_selected(df, period, iso_list):
+    """Attack counts for the selected countries only (ranking among them)."""
+    current, _, _ = filter_periods(df, period)
+    require_data(current, period)
+    codes = normalize_iso2(iso_list)
+    subset = current[current["country"].isin(codes)]
+    country_counts = subset["country"].value_counts().reset_index()
+    country_counts.columns = ["ISO2", "counts"]
+    country_counts = country_counts.merge(
+        iso_frame(), how="left", on="ISO2"
+    ).dropna()[["country", "ISO3", "ISO2", "counts"]]
+    total_attacks = len(subset)
+    country_counts["proportion"] = (
+        (country_counts["counts"] / total_attacks).round(3) if total_attacks > 0 else 0
+    )
     return country_counts
 
 
