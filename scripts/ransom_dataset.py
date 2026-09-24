@@ -41,6 +41,10 @@ LOG_LEVEL = "DEBUG"  # DEBUG, INFO, WARNING, ERROR, CRITICAL
 logger, console_handler = setup_logger("ransom_ingestor", log_to_file=True)
 console_handler.setLevel(getattr(logging, LOG_LEVEL))  # Aplica o nível configurado
 
+# Setor canônico usado quando nenhum mapeamento válido é encontrado.
+# Deve existir em resources/sectors.json (taxonomia canônica).
+FALLBACK_SECTOR = "Business Services"
+
 
 class RansomIngestor:
     """
@@ -74,6 +78,13 @@ class RansomIngestor:
             # Carregar mapeamento de setores
             with open(self.mapping_file, "r", encoding="utf-8") as f:
                 self.sectors_mapping = json.load(f)
+
+            # Carregar taxonomia canônica (fonte de verdade dos setores)
+            with open(self.sectors_file, "r", encoding="utf-8") as f:
+                self.canonical_sectors = set(json.load(f).keys())
+                logger.debug(
+                    f"Carregados {len(self.canonical_sectors)} setores canônicos"
+                )
 
             # Carregar códigos ISO válidos
             with open(self.iso_file, "r", encoding="utf-8") as f:
@@ -153,11 +164,16 @@ class RansomIngestor:
         """
         Mapeia o setor original para nosso padrão de classificação.
 
+        Garante que o resultado esteja sempre dentro da taxonomia canônica
+        (`resources/sectors.json`), exceto pelo valor sentinela "Not Found".
+        Quando não há mapeamento (ou o alvo do mapeamento está fora da
+        taxonomia), registra um aviso e usa o setor de fallback canônico.
+
         Args:
             original_sector: Setor original da fonte
 
         Returns:
-            Setor mapeado ou setor original se não houver mapeamento
+            Setor canônico mapeado, "Not Found" ou o fallback canônico
         """
         try:
             # Tratar caso especial de Not Found
@@ -165,23 +181,42 @@ class RansomIngestor:
                 return "Not Found"
 
             # Tentar encontrar mapeamento direto
+            mapped = None
             if original_sector in self.sectors_mapping:
                 mapped = self.sectors_mapping[original_sector]
-                return mapped
+            else:
+                # Se não encontrar, tentar normalizar e procurar novamente
+                normalized = original_sector.strip().lower()
+                for source, target in self.sectors_mapping.items():
+                    if source.lower() == normalized:
+                        mapped = target
+                        break
 
-            # Se não encontrar, tentar normalizar e procurar novamente
-            normalized = original_sector.strip().lower()
-            for source, target in self.sectors_mapping.items():
-                if source.lower() == normalized:
-                    return target
+            # Sem mapeamento: nunca devolver o rótulo bruto da fonte
+            if mapped is None:
+                logger.warning(
+                    f"Setor sem mapeamento: {original_sector}; "
+                    f"usando fallback '{FALLBACK_SECTOR}'"
+                )
+                return FALLBACK_SECTOR
 
-            # Se não encontrar mapeamento, retornar original
-            logger.warning(f"Setor sem mapeamento: {original_sector}")
-            return original_sector
+            # Preservar o sentinela Not Found
+            if mapped == "Not Found":
+                return "Not Found"
+
+            # Blindagem: o alvo precisa existir na taxonomia canônica
+            if mapped not in self.canonical_sectors:
+                logger.warning(
+                    f"Setor mapeado fora da taxonomia: {original_sector} -> "
+                    f"'{mapped}'; usando fallback '{FALLBACK_SECTOR}'"
+                )
+                return FALLBACK_SECTOR
+
+            return mapped
 
         except Exception as e:
             logger.error(f"Erro ao mapear setor {original_sector}: {str(e)}")
-            return original_sector
+            return FALLBACK_SECTOR
 
     def _classify_sector(self, row: pd.Series) -> tuple[str, bool]:
         """

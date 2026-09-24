@@ -59,6 +59,7 @@ def _bare_ingestor(extractor=None):
     ingestor.classifier = None
     ingestor.extractor = extractor if extractor is not None else _NullExtractor()
     ingestor.sectors_mapping = {"Finance": "Financial Services"}
+    ingestor.canonical_sectors = {"Financial Services"}
     ingestor.columns = list(COLUMNS)
     ingestor.classification_start_time = None
     ingestor.classification_total_time = 0.0
