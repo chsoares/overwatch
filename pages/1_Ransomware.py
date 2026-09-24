@@ -50,7 +50,10 @@ _HEATMAP_COLORSCALE_COUNTRY = [
     [0.95, "rgb(72, 61, 139)"],
     [1.0, "rgb(45, 35, 95)"],
 ]
-_COLORWAY_COUNTRY = ["orangered", "darkorange", "darkred", "yellowgreen", "teal"]
+_COLORWAY_COUNTRY = [
+    "#1F77B4", "#FF7F0E", "#2CA02C", "#D62728", "#9467BD",
+    "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF",
+]
 
 st.set_page_config(
     page_title="overwatch / ransomware",
@@ -423,10 +426,10 @@ def render_active_groups(world, country, name):
         _plot_active_groups(world)
     with col2:
         st.write(f"###### Em {name}")
-        _plot_active_groups(country)
+        _plot_active_groups(country, color="royalblue", mean_color="lightskyblue")
 
 
-def _plot_active_groups(active):
+def _plot_active_groups(active, color="rebeccapurple", mean_color="plum"):
     if active.empty or active["active_groups"].sum() == 0:
         st.info("Sem dados para o período")
         return
@@ -434,7 +437,7 @@ def _plot_active_groups(active):
     labels = month_labels(active["date"])
     st.plotly_chart(
         line_with_mean(labels, active["active_groups"], "Grupos ativos",
-                       "rebeccapurple", mean=mean_active, mean_color="plum",
+                       color, mean=mean_active, mean_color=mean_color,
                        hover="Grupos: %{y}<extra></extra>",
                        y_range=[0, mean_active * 1.6], height=300),
     )
