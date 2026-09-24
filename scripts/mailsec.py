@@ -42,6 +42,22 @@ console_handler.setLevel(getattr(logging, LOG_LEVEL))
 # Suprimir warnings
 warnings.filterwarnings("ignore")
 
+# Explicit public DNS servers so behavior matches between local and CI
+# (the machine's /etc/resolv.conf may include internal nameservers that do
+# not exist on GitHub runners).
+DNS_SERVERS = [
+    "8.8.8.8",    # Google DNS
+    "1.1.1.1",    # Cloudflare
+    "9.9.9.9",    # Quad9
+]
+
+_resolver = dns.resolver.Resolver()
+_resolver.nameservers = DNS_SERVERS
+_resolver.timeout = 3.0      # per-attempt timeout
+_resolver.lifetime = 5.0     # total per-query budget
+dns.resolver.default_resolver = _resolver
+logger.info(f"Servidores DNS configurados: {', '.join(DNS_SERVERS)}")
+
 # Caminho do CSV de saída
 CSV_FILE_PATH = DATA_DIR / "mailsec_dataset.csv"
 

@@ -37,6 +37,8 @@ console_handler.setLevel(getattr(logging, LOG_LEVEL))
 # Suprimir warnings
 warnings.filterwarnings("ignore")
 
+DNSKEY_SERVER = "8.8.8.8"   # DNS server used for the direct DNSKEY query
+
 # Caminho do CSV de entrada/saída
 CSV_FILE_PATH = DATA_DIR / "mailsec_dataset.csv"
 
@@ -61,11 +63,11 @@ def check_dnssec(domain):
         
         # Fazer a query usando Google DNS (8.8.8.8)
         try:
-            response = dns.query.udp(request, '8.8.8.8', timeout=2)
+            response = dns.query.udp(request, DNSKEY_SERVER, timeout=2)
         except Exception as e:
             # Tentar TCP como fallback
             try:
-                response = dns.query.tcp(request, '8.8.8.8', timeout=2)
+                response = dns.query.tcp(request, DNSKEY_SERVER, timeout=2)
             except Exception:
                 return False
 
