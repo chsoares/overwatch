@@ -20,6 +20,7 @@ from core.ui import (
     MONTHS_ABBR,
     delta_color,
     format_delta,
+    localize_victim_dates,
     month_labels,
     period_caption,
 )
@@ -320,7 +321,9 @@ def render_victims(victims, name):
     if victims.empty:
         st.info("Sem dados para o período")
         return
-    st.dataframe(victims, hide_index=True)
+    display = victims.copy()
+    display["Data do anúncio"] = localize_victim_dates(display["Data do anúncio"])
+    st.dataframe(display, hide_index=True)
 
 
 def render_monthly_attacks(monthly, name):
@@ -328,7 +331,7 @@ def render_monthly_attacks(monthly, name):
     st.caption(
         "Evolução do número de ataques ransomware anunciados ao longo dos últimos meses"
     )
-    labels = month_labels(monthly["date"], capitalize=True)
+    labels = month_labels(monthly["date"])
     col1, col2 = st.columns(2, border=True)
     with col1:
         st.write("###### No mundo")

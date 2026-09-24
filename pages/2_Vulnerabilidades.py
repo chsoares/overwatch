@@ -280,7 +280,7 @@ with tab_dashboard:
     with st.container(border=True):
         st.plotly_chart(
             line_with_mean(
-                month_labels(monthly["date"], capitalize=True),
+                month_labels(monthly["date"]),
                 monthly["vulnerabilities"],
                 "Vulnerabilidades",
                 "firebrick",

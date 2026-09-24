@@ -86,6 +86,29 @@ def test_month_labels():
     assert ui.month_labels(pd.to_datetime(["2024-03-01"]), capitalize=True) == ["Mar. 24"]
 
 
+def test_localize_victim_dates_capitalized_abbr():
+    assert ui.localize_victim_dates("01 Sep. 2026") == "01 set. 2026"
+
+
+def test_localize_victim_dates_lowercase_abbr():
+    assert ui.localize_victim_dates("01 sep. 2026") == "01 set. 2026"
+
+
+def test_localize_victim_dates_keeps_month_already_portuguese():
+    assert ui.localize_victim_dates("07 jan. 2024") == "07 jan. 2024"
+
+
+def test_localize_victim_dates_leaves_non_date_text_unchanged():
+    assert ui.localize_victim_dates("Sem dados") == "Sem dados"
+
+
+def test_localize_victim_dates_maps_series():
+    result = ui.localize_victim_dates(
+        pd.Series(["01 Sep. 2026", "07 jan. 2024", "31 Dec. 2025"])
+    )
+    assert list(result) == ["01 set. 2026", "07 jan. 2024", "31 dez. 2025"]
+
+
 def test_period_caption():
     assert ui.period_caption({"type": "monthly", "start": date(2024, 3, 1)}) == "Março de 2024"
     assert ui.period_caption({"type": "annual", "start": date(2024, 1, 1)}) == "2024"

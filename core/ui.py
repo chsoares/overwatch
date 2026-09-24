@@ -1,5 +1,7 @@
 """Display and formatting helpers shared by the content pages (no Streamlit)."""
 
+import re
+
 import pandas as pd
 
 from core.periods import MONTHS_PT
@@ -8,6 +10,37 @@ MONTHS_ABBR = (
     "jan", "fev", "mar", "abr", "mai", "jun",
     "jul", "ago", "set", "out", "nov", "dez",
 )
+
+_EN_TO_PT_ABBR = {
+    "Jan": "jan", "Feb": "fev", "Mar": "mar", "Apr": "abr",
+    "May": "mai", "Jun": "jun", "Jul": "jul", "Aug": "ago",
+    "Sep": "set", "Oct": "out", "Nov": "nov", "Dec": "dez",
+}
+
+_MONTH_TOKEN_RE = re.compile(r"\b([A-Za-z]{3})\b")
+
+
+def _translate_month_token(match):
+    token = match.group(1)
+    return _EN_TO_PT_ABBR.get(token) or _EN_TO_PT_ABBR.get(token.capitalize(), token)
+
+
+def _localize_victim_date(value):
+    if not isinstance(value, str):
+        return value
+    return _MONTH_TOKEN_RE.sub(_translate_month_token, value)
+
+
+def localize_victim_dates(series):
+    """Translate English month abbrs from analytics into Portuguese.
+
+    ``victims_table`` emits labels like ``"01 Sep. 2026"`` (English, sometimes
+    lowercased). Analytics stays locale-independent; the presentation layer
+    rewrites the month token for display. Accepts a single string or a Series.
+    """
+    if isinstance(series, str):
+        return _localize_victim_date(series)
+    return series.map(_localize_victim_date)
 
 
 def month_labels(dates, capitalize=False):

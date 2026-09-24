@@ -4,7 +4,9 @@ Every page is exercised end-to-end with ``AppTest`` and must fail loudly: a
 rendering exception or missing branding is a test failure, not a skip.
 """
 
+import json
 import py_compile
+import re
 from datetime import date, datetime
 from pathlib import Path
 
@@ -65,6 +67,33 @@ _EMAIL_LEGACY_REFERENCES = (
 )
 
 _PAGES = (HOME, PAGE, VULN_PAGE, EMAIL_PAGE)
+
+_MONTH_LABEL_RE = re.compile(r"^([A-Za-z]{3})\. \d{2}$")
+_PT_MONTH_ABBRS = {
+    "jan", "fev", "mar", "abr", "mai", "jun",
+    "jul", "ago", "set", "out", "nov", "dez",
+}
+
+
+def _plotly_month_labels(app):
+    """Collect ``<abbr>. <yy>`` x labels from every rendered Plotly chart."""
+    labels = []
+    for chart in app.get("plotly_chart"):
+        spec = json.loads(chart.proto.spec)
+        for trace in spec.get("data", []):
+            for value in trace.get("x") or []:
+                match = _MONTH_LABEL_RE.match(str(value))
+                if match:
+                    labels.append(match.group(1))
+    return labels
+
+
+def _assert_month_labels_lowercase_pt(app):
+    labels = _plotly_month_labels(app)
+    assert labels, "expected at least one month label in the rendered charts"
+    for abbr in labels:
+        assert abbr == abbr.lower(), f"capitalized month label: {abbr}"
+        assert abbr in _PT_MONTH_ABBRS, f"non-portuguese month label: {abbr}"
 
 
 @pytest.fixture(autouse=True)
@@ -137,6 +166,7 @@ def test_ransomware_page_runs_without_exception():
     assert not app.exception, [error.value for error in app.exception]
     assert [tab.label for tab in app.tabs] == ["Dashboard", "Dataset"]
     assert any("overwatch / ransomware" in title.value for title in app.title)
+    _assert_month_labels_lowercase_pt(app)
 
 
 def test_filter_dataset_treats_query_as_literal_text():
@@ -217,6 +247,7 @@ def test_vulnerability_page_runs_without_exception():
     assert not app.exception, [error.value for error in app.exception]
     assert [tab.label for tab in app.tabs] == ["Dashboard", "Dataset"]
     assert any("overwatch / vulnerabilidades" in title.value for title in app.title)
+    _assert_month_labels_lowercase_pt(app)
 
 
 def test_vulnerability_filter_dataset_treats_query_as_literal_text():
