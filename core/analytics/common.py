@@ -245,7 +245,12 @@ def selection_label(iso_list, name_fn):
 
 
 def has_country_data(data, iso2):
-    """Legacy ``_validate_country_data``: does ``data`` hold rows for ``iso2``?"""
+    """Legacy ``_validate_country_data``: does ``data`` hold rows for ``iso2``?
+
+    ``iso2`` may be a single code or a list of codes; a list is satisfied when
+    any of its codes has rows.
+    """
     if data.empty:
         return False
-    return bool(len(data[data["country"] == iso2]))
+    iso_list = normalize_iso2(iso2)
+    return bool(len(data[data["country"].isin(iso_list)]))

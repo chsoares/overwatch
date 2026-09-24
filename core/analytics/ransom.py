@@ -23,7 +23,9 @@ from core.analytics.common import (
     month_name,
     month_to_timestamp,
     monthly_axis_end,
+    normalize_iso2,
     require_data,
+    selection_label,
     translate_sector,
 )
 from core.paths import DATA_DIR
@@ -50,6 +52,7 @@ def historical_series(df, period, iso2="BR", today=None):
     ``today`` defaults to ``pd.Timestamp.today()`` and exists so tests can
     freeze the wall-clock cutoff; the default behavior is unchanged.
     """
+    iso_list = normalize_iso2(iso2) or ["BR"]
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
 
@@ -97,7 +100,7 @@ def historical_series(df, period, iso2="BR", today=None):
         monthly_counts, how="left", on=["year", "month", "sigla"]
     ).fillna(0)
 
-    series_data_br = series_data[series_data["country"] == iso2].copy()
+    series_data_br = series_data[series_data["country"].isin(iso_list)].copy()
     monthly_counts_br = (
         series_data_br.groupby(["year", "month", "sigla"])
         .size()
@@ -128,10 +131,11 @@ def overview(df, period, iso2="BR"):
     """Legacy ``analyze_overview`` comparison table."""
     current, previous, _ = filter_periods(df, period)
     require_data(current, period)
-    name = country_name(iso2)
+    iso_list = normalize_iso2(iso2) or ["BR"]
+    name = selection_label(iso_list, country_name)
 
-    has_current_country = has_country_data(current, iso2)
-    has_previous_country = has_country_data(previous, iso2)
+    has_current_country = has_country_data(current, iso_list)
+    has_previous_country = has_country_data(previous, iso_list)
 
     metrics = {
         "Ataques no período": len(current),
@@ -143,8 +147,8 @@ def overview(df, period, iso2="BR"):
 
     metrics_br = {}
     if has_current_country or has_previous_country:
-        current_br = current[current["country"] == iso2]
-        previous_br = previous[previous["country"] == iso2]
+        current_br = current[current["country"].isin(iso_list)]
+        previous_br = previous[previous["country"].isin(iso_list)]
         metrics_br["Ataques no período"] = len(current_br)
         metrics_br["Ataques no período anterior"] = len(previous_br)
     else:
@@ -255,6 +259,7 @@ def monthly_attacks(df, period, iso2="BR"):
     """Legacy ``analyze_monthly`` dashboard slice."""
     _, _, monthly_data = filter_periods(df, period)
     require_data(monthly_data, period)
+    iso_list = normalize_iso2(iso2) or ["BR"]
 
     monthly_data = monthly_data.sort_values("published").copy()
     monthly_data["year"] = monthly_data["published"].dt.year
@@ -278,7 +283,7 @@ def monthly_attacks(df, period, iso2="BR"):
         .fillna(0)
     )
 
-    monthly_data_br = monthly_data[monthly_data["country"] == iso2]
+    monthly_data_br = monthly_data[monthly_data["country"].isin(iso_list)]
     monthly_counts_br = (
         monthly_data_br.groupby(["year", "month", "sigla"])
         .size()
@@ -324,8 +329,9 @@ def daily_heatmap(df, period, iso2=None):
     selected = require_data(
         df[(df["published"] >= start) & (df["published"] <= end)], period
     )
-    if iso2 is not None:
-        selected = selected[selected["country"] == iso2]
+    iso_list = normalize_iso2(iso2)
+    if iso_list:
+        selected = selected[selected["country"].isin(iso_list)]
     if selected.empty:
         return pd.DataFrame(columns=["date", "day", "week", "count"])
     daily_counts = (
@@ -368,8 +374,9 @@ def top_groups(df, period, iso2=None):
     """Legacy ``analyze_groups`` top-groups ranking (global or per country)."""
     current, _, _ = filter_periods(df, period)
     require_data(current, period)
-    if iso2 is not None:
-        current = current[current["country"] == iso2]
+    iso_list = normalize_iso2(iso2)
+    if iso_list:
+        current = current[current["country"].isin(iso_list)]
     if current.empty:
         return pd.DataFrame(columns=["group_name", "counts", "proportion"])
     return _top_groups_frame(current)
@@ -381,9 +388,10 @@ def monthly_group_activity(df, period, iso2=None):
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
     require_data(monthly_data, period)
-    if iso2 is not None:
-        current = current[current["country"] == iso2]
-        monthly_data = monthly_data[monthly_data["country"] == iso2]
+    iso_list = normalize_iso2(iso2)
+    if iso_list:
+        current = current[current["country"].isin(iso_list)]
+        monthly_data = monthly_data[monthly_data["country"].isin(iso_list)]
     if monthly_data.empty:
         return pd.DataFrame(columns=["date", "group_name", "attacks"])
 
@@ -448,8 +456,9 @@ def monthly_active_groups(df, period, iso2=None):
     """Legacy ``analyze_groups`` unique active groups per month (global or per country)."""
     _, _, monthly_data = filter_periods(df, period)
     require_data(monthly_data, period)
-    if iso2 is not None:
-        monthly_data = monthly_data[monthly_data["country"] == iso2]
+    iso_list = normalize_iso2(iso2)
+    if iso_list:
+        monthly_data = monthly_data[monthly_data["country"].isin(iso_list)]
     if monthly_data.empty:
         return pd.DataFrame(columns=["date", "active_groups"])
     monthly_data = monthly_data.copy()
@@ -529,7 +538,7 @@ def country_sectors(df, period, iso2):
     require_data(current, period)
     data = _translated(current)
 
-    country_mask = (data["country"] == iso2) & (
+    country_mask = (data["country"].isin(normalize_iso2(iso2))) & (
         data["activity_classified"] != "Not Found"
     )
     country_sectors = data[country_mask]["activity_classified_pt"].value_counts().reset_index()
@@ -547,14 +556,15 @@ def victims_table(df, period, iso2):
     """Legacy ``analyze_victims`` victim listing for ``iso2``."""
     current, _, _ = filter_periods(df, period)
     require_data(current, period)
-    if not has_country_data(current, iso2):
+    iso_list = normalize_iso2(iso2)
+    if not has_country_data(current, iso_list):
         return pd.DataFrame(columns=["Vítima", "Setor", "Grupo", "Data do anúncio"])
 
     data = current.copy()
     data["activity_classified"] = data["activity_classified"].apply(
         lambda x: translate_sector(x) if x != "Not Found" else "Não Encontrado"
     )
-    victims = data[data["country"] == iso2][
+    victims = data[data["country"].isin(iso_list)][
         ["post_title", "activity_classified", "group_name", "published"]
     ].copy()
     victims = victims.sort_values("published")
