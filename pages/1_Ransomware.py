@@ -426,7 +426,7 @@ def render_active_groups(world, country, name):
         _plot_active_groups(world)
     with col2:
         st.write(f"###### Em {name}")
-        _plot_active_groups(country, color="royalblue", mean_color="lightskyblue")
+        _plot_active_groups(country, color="darkorange", mean_color="orange")
 
 
 def _plot_active_groups(active, color="rebeccapurple", mean_color="plum"):
