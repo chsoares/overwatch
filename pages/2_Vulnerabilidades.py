@@ -340,7 +340,14 @@ with tab_dashboard:
         st.plotly_chart(
             horizontal_bar(vendors, "CVEs", "Empresa", "teal", hover_label="CVEs")
         )
-    st.dataframe(vendors, hide_index=True)
+    vendors_display = vendors.copy()
+    vendors_display["CVSS Médio"] = vendors_display["CVSS Médio"].map(
+        lambda value: "" if value != value else f"{value:.1f}"
+    )
+    vendors_display["EPSS Médio"] = vendors_display["EPSS Médio"].map(
+        lambda value: "" if value != value else f"{value * 100:.1f}%"
+    )
+    st.dataframe(vendors_display, hide_index=True)
 
 with tab_dataset:
     st.subheader("Dataset")
