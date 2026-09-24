@@ -341,13 +341,19 @@ with tab_dashboard:
             horizontal_bar(vendors, "CVEs", "Empresa", "teal", hover_label="CVEs")
         )
     vendors_display = vendors.copy()
-    vendors_display["CVSS Médio"] = vendors_display["CVSS Médio"].map(
-        lambda value: "" if value != value else f"{value:.1f}"
+    vendors_display["EPSS Médio"] = vendors_display["EPSS Médio"] * 100
+    st.dataframe(
+        vendors_display,
+        hide_index=True,
+        column_config={
+            "CVSS Médio": st.column_config.NumberColumn(
+                "CVSS Médio", format="%.1f"
+            ),
+            "EPSS Médio": st.column_config.NumberColumn(
+                "EPSS Médio", format="%.1f%%"
+            ),
+        },
     )
-    vendors_display["EPSS Médio"] = vendors_display["EPSS Médio"].map(
-        lambda value: "" if value != value else f"{value * 100:.1f}%"
-    )
-    st.dataframe(vendors_display, hide_index=True)
 
 with tab_dataset:
     st.subheader("Dataset")
