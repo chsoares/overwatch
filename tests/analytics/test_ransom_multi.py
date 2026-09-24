@@ -118,3 +118,17 @@ def test_historical_series_multi_selection_is_sum():
     df = ransom.load_dataset(RANSOM_CSV)
     result = ransom.historical_series_multi(df, PERIOD, ["BR", "US"])
     assert (result["selection_attacks"] == result["BR"] + result["US"]).all()
+
+
+def test_historical_series_multi_empty_selection_is_zero():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.historical_series_multi(df, PERIOD, [])
+    assert result["selection_attacks"].sum() == 0
+    assert "BR" not in result.columns
+    assert len(result) == len(result["date"])
+
+
+def test_historical_series_multi_missing_country_is_zero():
+    df = ransom.load_dataset(RANSOM_CSV)
+    result = ransom.historical_series_multi(df, PERIOD, ["ZZ"])
+    assert result["selection_attacks"].sum() == 0

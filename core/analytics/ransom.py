@@ -139,8 +139,11 @@ def historical_series_multi(df, period, iso_list, today=None):
         "date": world["date"],
         "world_attacks": world["world_attacks"],
     })
-    selection = historical_series(df, period, iso2=codes, today=today)
-    result["selection_attacks"] = selection["country_attacks"]
+    if codes:
+        selection = historical_series(df, period, iso2=codes, today=today)
+        result["selection_attacks"] = selection["country_attacks"]
+    else:
+        result["selection_attacks"] = pd.Series(0, index=result.index)
     for code in codes:
         single = historical_series(df, period, iso2=[code], today=today)
         result[code] = single["country_attacks"]
