@@ -55,16 +55,19 @@ def period_widget(key, min_date, max_date, default=None):
 
 
 def country_widget(key, default="BR"):
-    """Render the country selector and return the chosen ISO2 code."""
+    """Render the country selector and return a list of ISO2 codes."""
     countries = _load_countries()
     options = {f"{c['nome']} ({c['ISO2'].strip()})": c["ISO2"].strip() for c in countries}
     labels = list(options.keys())
-    default_label = next((label for label, iso2 in options.items() if iso2 == default), None)
-    if default_label is None:
-        default_label = next((label for label, iso2 in options.items() if iso2 == "BR"), None)
-    index = labels.index(default_label) if default_label else 0
-    chosen = st.sidebar.selectbox("País", labels, index=index, key=f"{key}_country")
-    return options[chosen]
+    default_labels = [label for label in labels if options[label] == default] or [
+        label for label in labels if options[label] == "BR"
+    ]
+    chosen = st.sidebar.multiselect(
+        "Países", labels, default=default_labels[:1], key=f"{key}_country"
+    )
+    if not chosen:
+        chosen = default_labels[:1]
+    return [options[label] for label in chosen]
 
 
 def vendor_widget(key, vendors, default="all"):

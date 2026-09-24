@@ -10,7 +10,12 @@ import streamlit as st
 from plotly.subplots import make_subplots
 
 from core.analytics import ransom
-from core.analytics.common import EmptyPeriodError, country_name
+from core.analytics.common import (
+    EmptyPeriodError,
+    country_name,
+    filter_periods,
+    selection_label,
+)
 from core.charts import horizontal_bar, line_with_mean
 from core.dataset import ALL_COLUMNS, filter_dataset
 from core.filters import country_widget, normalize_period, period_widget
@@ -112,6 +117,44 @@ def group_activity_chart(activity, colorway=None):
     )
     if colorway is not None:
         fig.update_layout(colorway=colorway)
+    return fig
+
+
+def country_series_chart(series, name_fn):
+    series = series.copy()
+    series["month_label"] = month_labels(series["date"])
+    fig = go.Figure()
+    for code in series.columns:
+        if code == "date":
+            continue
+        label = name_fn(code)
+        fig.add_trace(
+            go.Scatter(
+                x=series["month_label"],
+                y=series[code],
+                name=label,
+                mode="lines+markers",
+                line=dict(width=2, shape="linear"),
+                marker=dict(size=6),
+                hovertemplate="<b>%{x}</b><br>" + label
+                + "<br>Incidentes: %{y}<extra></extra>",
+            )
+        )
+    fig.update_layout(
+        showlegend=True,
+        colorway=_COLORWAY_COUNTRY,
+        legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="left", x=1.02),
+        margin=dict(l=0, r=100, t=30, b=0),
+        plot_bgcolor="white",
+        xaxis=dict(showgrid=False, showspikes=False, type="category"),
+        yaxis=dict(
+            showspikes=False,
+            showgrid=True,
+            gridcolor="lightgray",
+            gridwidth=0.5,
+            rangemode="tozero",
+        ),
+    )
     return fig
 
 
@@ -289,6 +332,84 @@ def historical_series_chart(series, name):
     return fig
 
 
+def historical_series_multi_chart(series, name_fn):
+    labels = month_labels(series["date"])
+    codes = [
+        column
+        for column in series.columns
+        if column not in ("date", "world_attacks", "selection_attacks")
+    ]
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=series["world_attacks"],
+            name="Mundo",
+            line=dict(color="firebrick", width=3),
+            mode="lines+markers",
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=series["selection_attacks"],
+            name="países selecionados",
+            line=dict(color="green", width=3, dash="dash"),
+            mode="lines+markers",
+        ),
+        secondary_y=True,
+    )
+    for index, code in enumerate(codes):
+        label = name_fn(code)
+        fig.add_trace(
+            go.Scatter(
+                x=labels,
+                y=series[code],
+                name=label,
+                line=dict(
+                    color=_COLORWAY_COUNTRY[index % len(_COLORWAY_COUNTRY)], width=2
+                ),
+                mode="lines+markers",
+                hovertemplate="<b>%{x}</b><br>" + label
+                + "<br>Incidentes: %{y}<extra></extra>",
+            ),
+            secondary_y=True,
+        )
+
+    world_max = series["world_attacks"].max()
+    right_columns = ["selection_attacks"] + codes
+    right_max = series[right_columns].to_numpy().max()
+    y1_max = world_max * 1.1 if world_max else 5
+    y2_max = right_max * 1.1 if right_max else 5
+
+    fig.update_layout(
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        margin=dict(l=0, r=0, t=30, b=0),
+        hovermode="x unified",
+        plot_bgcolor="white",
+    )
+    fig.update_xaxes(showgrid=False, type="category")
+    fig.update_yaxes(
+        title_text="Incidentes Mundiais",
+        secondary_y=False,
+        showgrid=True,
+        gridcolor="lightgray",
+        gridwidth=0.5,
+        title_font=dict(color="firebrick"),
+        range=[0, y1_max],
+    )
+    fig.update_yaxes(
+        title_text="Incidentes nos países selecionados",
+        secondary_y=True,
+        showgrid=False,
+        title_font=dict(color="green"),
+        range=[0, y2_max],
+    )
+    return fig
+
+
 def render_overview(overview, world_groups, name):
     st.subheader("Visão geral")
     st.caption("Métricas de ataques no período e variação em relação ao período anterior")
@@ -329,6 +450,20 @@ def render_overview(overview, world_groups, name):
                       f"{int(top['counts'])} ataques", delta_color="off", border=True)
 
 
+def victims_with_country(data, period, victims, iso_list):
+    """Attach the source country to a ``victims_table`` frame for several countries.
+
+    ``victims_table`` preserves the source frame index, so the country is
+    resolved by label against the same period slice.
+    """
+    if len(iso_list) < 2 or victims.empty:
+        return victims
+    current, _, _ = filter_periods(data, period)
+    display = victims.copy()
+    display.insert(1, "País", current.loc[display.index, "country"].map(country_name))
+    return display
+
+
 def render_victims(victims, name):
     st.subheader(f"Vítimas em {name}")
     st.caption(
@@ -342,7 +477,7 @@ def render_victims(victims, name):
     st.dataframe(display, hide_index=True)
 
 
-def render_monthly_attacks(monthly, name):
+def render_monthly_attacks(monthly, name, by_country=None):
     st.subheader("Ataques mensais")
     st.caption(
         "Evolução do número de ataques ransomware anunciados ao longo dos últimos meses"
@@ -366,6 +501,10 @@ def render_monthly_attacks(monthly, name):
                 )
         else:
             st.info("Sem dados para o período")
+    if by_country is not None:
+        with st.container(border=True):
+            st.write("###### Por país selecionado")
+            st.plotly_chart(country_series_chart(by_country, country_name))
 
 
 def render_groups(world_groups, country_groups, name):
@@ -443,16 +582,37 @@ def _plot_active_groups(active, color="rebeccapurple", mean_color="plum"):
     )
 
 
-def render_countries(countries):
+def render_countries(countries, selected=None):
     st.subheader("Países mais afetados")
     st.caption(
         "Países com maior número de vítimas de ransomware anunciadas durante o período"
     )
-    with st.container(border=True):
-        st.plotly_chart(
-            horizontal_bar(countries, "counts", "country", "midnightblue",
-                           hover_label="Incidentes"),
-        )
+    if selected is None:
+        with st.container(border=True):
+            st.plotly_chart(
+                horizontal_bar(countries, "counts", "country", "midnightblue",
+                               hover_label="Incidentes"),
+            )
+        return
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### No mundo")
+        if countries.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(countries, "counts", "country", "midnightblue",
+                               hover_label="Incidentes"),
+            )
+    with col2:
+        st.write("###### Nos países selecionados")
+        if selected.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(selected, "counts", "country", "teal",
+                               hover_label="Incidentes"),
+            )
 
 
 def render_geography(countries):
@@ -514,14 +674,17 @@ def render_daily_heatmap(world, country, period, name):
             )
 
 
-def render_historical_series(series, name):
+def render_historical_series(series, name, multi_series=None):
     st.subheader("Série histórica")
     st.caption(
         f"Evolução do número de ataques ransomware no mundo e em {name} "
         "desde o início da coleta de dados"
     )
     with st.container(border=True):
-        st.plotly_chart(historical_series_chart(series, name))
+        if multi_series is not None:
+            st.plotly_chart(historical_series_multi_chart(multi_series, country_name))
+        else:
+            st.plotly_chart(historical_series_chart(series, name))
 
 
 data = load_dataset()
@@ -533,25 +696,36 @@ st.sidebar.caption("Configurações")
 st.sidebar.subheader("Período")
 period = normalize_period(period_widget("ransom", min_date, max_date))
 st.sidebar.subheader("País")
-iso2 = country_widget("ransom", default="BR")
-name = country_name(iso2)
+iso_list = country_widget("ransom", default="BR")
+name = selection_label(iso_list, country_name)
+multi_country = len(iso_list) >= 2
 
 try:
-    overview = ransom.overview(data, period, iso2)
-    monthly = ransom.monthly_attacks(data, period, iso2)
-    historical = ransom.historical_series(data, period, iso2)
+    overview = ransom.overview(data, period, iso_list)
+    monthly = ransom.monthly_attacks(data, period, iso_list)
+    historical = ransom.historical_series(data, period, iso_list)
     world_groups = ransom.top_groups(data, period, iso2=None)
-    country_groups = ransom.top_groups(data, period, iso2=iso2)
+    country_groups = ransom.top_groups(data, period, iso2=iso_list)
     group_activity = ransom.monthly_group_activity(data, period)
-    group_activity_country = ransom.monthly_group_activity(data, period, iso2=iso2)
+    group_activity_country = ransom.monthly_group_activity(data, period, iso2=iso_list)
     active_groups = ransom.monthly_active_groups(data, period)
-    active_groups_country = ransom.monthly_active_groups(data, period, iso2=iso2)
+    active_groups_country = ransom.monthly_active_groups(data, period, iso2=iso_list)
     countries = ransom.countries(data, period)
     world_sectors = ransom.world_sectors(data, period)
-    country_sectors = ransom.country_sectors(data, period, iso2)
-    victims = ransom.victims_table(data, period, iso2)
+    country_sectors = ransom.country_sectors(data, period, iso_list)
+    victims = ransom.victims_table(data, period, iso_list)
     heatmap = ransom.daily_heatmap(data, period)
-    heatmap_country = ransom.daily_heatmap(data, period, iso2=iso2)
+    heatmap_country = ransom.daily_heatmap(data, period, iso2=iso_list)
+    if multi_country:
+        monthly_by_country = ransom.monthly_attacks_by_country(data, period, iso_list)
+        countries_selected_frame = ransom.countries_selected(data, period, iso_list)
+        historical_multi = ransom.historical_series_multi(data, period, iso_list)
+        victims_display = victims_with_country(data, period, victims, iso_list)
+    else:
+        monthly_by_country = None
+        countries_selected_frame = None
+        historical_multi = None
+        victims_display = victims
 except EmptyPeriodError:
     st.warning(
         "Não há dados para o período selecionado. "
@@ -570,10 +744,10 @@ with tab_dashboard:
     render_overview(overview, world_groups, name)
 
     st.write("")
-    render_victims(victims, name)
+    render_victims(victims_display, name)
 
     st.write("")
-    render_monthly_attacks(monthly, name)
+    render_monthly_attacks(monthly, name, by_country=monthly_by_country)
 
     st.write("")
     render_groups(world_groups, country_groups, name)
@@ -585,7 +759,7 @@ with tab_dashboard:
     render_active_groups(active_groups, active_groups_country, name)
 
     st.write("")
-    render_countries(countries)
+    render_countries(countries, selected=countries_selected_frame)
 
     st.write("")
     render_geography(countries)
@@ -597,7 +771,7 @@ with tab_dashboard:
     render_daily_heatmap(heatmap, heatmap_country, period, name)
 
     st.write("")
-    render_historical_series(historical, name)
+    render_historical_series(historical, name, multi_series=historical_multi)
 
 with tab_dataset:
     st.subheader("Dataset")

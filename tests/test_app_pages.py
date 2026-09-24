@@ -179,6 +179,61 @@ def test_ransomware_page_has_world_and_country_panels():
     assert "Em Brasil" in markdown
 
 
+def test_ransomware_country_selector_is_multiselect_defaulting_to_brazil():
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    selectors = [widget for widget in app.sidebar.multiselect if widget.label == "Países"]
+    assert selectors, "country multiselect not found"
+    assert selectors[0].value == ["Brasil (BR)"]
+
+
+def test_multi_country_analytics_feed_the_page():
+    """The multi-only visuals consume the list-based analytics directly."""
+    df = ransom.load_dataset(RANSOM_CSV)
+    period = {"type": "annual", "start": date(2024, 1, 1), "end": date(2024, 12, 31)}
+    iso_list = ["BR", "US"]
+
+    by_country = ransom.monthly_attacks_by_country(df, period, iso_list)
+    assert set(iso_list).issubset(by_country.columns)
+
+    selected = ransom.countries_selected(df, period, iso_list)
+    assert set(selected["ISO2"]).issubset(set(iso_list))
+
+    multi = ransom.historical_series_multi(df, period, iso_list)
+    assert {"world_attacks", "selection_attacks"}.issubset(multi.columns)
+    assert set(iso_list).issubset(multi.columns)
+
+    source = PAGE.read_text(encoding="utf-8")
+    assert "iso2=iso_list" in source
+    assert "selection_label(iso_list, country_name)" in source
+
+
+def test_ransomware_victims_country_column_only_for_multi_selection():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("ransomware_page", PAGE)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    df = ransom.load_dataset(RANSOM_CSV)
+    period = {"type": "annual", "start": date(2024, 1, 1), "end": date(2024, 12, 31)}
+    iso_list = ["BR", "US"]
+
+    victims = ransom.victims_table(df, period, iso_list)
+    display = module.victims_with_country(df, period, victims, iso_list)
+    assert "País" in display.columns
+    assert len(display) == len(victims)
+    assert set(display["País"]).issubset({"Brasil", "Estados Unidos"})
+
+    single = module.victims_with_country(
+        df, period, ransom.victims_table(df, period, "BR"), ["BR"]
+    )
+    assert "País" not in single.columns
+
+
 def test_filter_dataset_treats_query_as_literal_text():
     """Metacharacter queries must not reach the regex engine.
 
