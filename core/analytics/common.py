@@ -114,11 +114,19 @@ def require_data(current, period):
 
 
 def monthly_axis_end(end, period):
-    """Legacy end-date adjustment for the monthly month axis."""
+    """Legacy end-date adjustment for the monthly month axis.
+
+    The end must land *inside* the selected month: returning the first day of
+    the next month made ``month_axis`` emit a 13th all-zero month whenever the
+    window's earliest timestamp was midnight (its time-of-day is inherited by
+    every generated month start). The last instant of the selected month keeps
+    that month in the axis while excluding the next one.
+    """
     kind = period["type"]
     if kind == "monthly":
         year, month = period["start"].year, period["start"].month
-        return pd.Timestamp(f"{year}-{month:02d}-01") + pd.DateOffset(months=1)
+        month_end = pd.Timestamp(f"{year}-{month:02d}-01") + pd.offsets.MonthEnd()
+        return month_end.replace(hour=23, minute=59, second=59, microsecond=999999)
     if kind == "custom":
         return end
     return end + pd.DateOffset(months=1)

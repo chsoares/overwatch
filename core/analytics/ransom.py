@@ -76,11 +76,16 @@ def historical_series(df, period, iso2="BR", today=None):
     series_data["month"] = series_data["published"].dt.month.map(month_name)
     series_data["sigla"] = series_data["published"].dt.month.map(month_abbr)
 
-    series_end = (
-        plot_end_date
-        if kind == "custom"
-        else plot_end_date + pd.DateOffset(months=1)
-    )
+    if kind == "custom":
+        series_end = plot_end_date
+    else:
+        # Land inside the month holding ``plot_end_date`` so the axis never
+        # appends a future zero month when ``plot_end_date`` was clamped to a
+        # mid-month ``today`` (inheriting the start's time-of-day otherwise
+        # admitted the next month-start boundary).
+        series_end = (plot_end_date + pd.offsets.MonthEnd(0)).replace(
+            hour=23, minute=59, second=59, microsecond=999999
+        )
     all_months = month_axis(
         series_data["published"].min(), series_end, include_year=True
     )
