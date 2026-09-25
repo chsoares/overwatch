@@ -14,11 +14,18 @@ from core.analytics.common import (
     EmptyPeriodError,
     country_name,
     filter_periods,
+    month_abbr,
     selection_label,
+    translate_sector,
 )
 from core.charts import horizontal_bar, line_with_mean
 from core.dataset import ALL_COLUMNS, filter_dataset
-from core.filters import country_widget, normalize_period, period_widget
+from core.filters import (
+    country_widget,
+    group_widget,
+    normalize_period,
+    period_widget,
+)
 from core.paths import RESOURCES_DIR
 from core.styles import apply_app_styles
 from core.ui import (
@@ -714,45 +721,354 @@ def render_historical_series(series, name, multi_series=None):
             st.plotly_chart(historical_series_chart(series, name))
 
 
+def _format_activity(value):
+    if value is None or pd.isna(value):
+        return "—"
+    return pd.Timestamp(value).strftime("%d/%m/%Y")
+
+
+def group_victims(data, period, group):
+    """Group-filtered victim listing with a ``País`` column.
+
+    Mirrors ``ransom.victims_table`` presentation (sector translation and
+    lowercased ``dd Mmm. yyyy`` dates) while adding the source country and
+    restricting the rows to one attacker group. Kept page-local so the
+    analytics layer stays untouched.
+    """
+    columns = ["Vítima", "País", "Setor", "Grupo", "Data"]
+    current, _, _ = filter_periods(data, period)
+    subset = current[current["group_name"] == group]
+    if subset.empty:
+        return pd.DataFrame(columns=columns)
+    subset = subset.copy()
+    subset["activity_classified"] = subset["activity_classified"].apply(
+        lambda x: translate_sector(x) if x != "Not Found" else "Não Encontrado"
+    )
+    victims = subset.sort_values("published")[
+        ["post_title", "country", "activity_classified", "group_name", "published"]
+    ].copy()
+    published = victims["published"]
+    victims["published"] = (
+        published.dt.day.astype(str).str.zfill(2)
+        + " "
+        + published.dt.month.map(month_abbr)
+        + ". "
+        + published.dt.year.astype(str)
+    ).str.replace(" 0", " ").str.lower()
+    victims["country"] = victims["country"].map(country_name)
+    victims["group_name"] = victims["group_name"].str.title()
+    victims.columns = columns
+    return victims
+
+
+def render_group_metrics(overview, group):
+    st.subheader("Métricas")
+    st.caption(
+        f"Indicadores de {group} no período e participação no total anunciado"
+    )
+    attacks = int(overview["Ataques"])
+    previous = int(overview["Ataques_anterior"])
+    delta = format_delta(attacks, previous, "Absoluta", overview["has_previous"])
+
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Ataques", str(attacks), delta,
+                  delta_color=delta_color(delta), border=True)
+    with col2:
+        st.metric("% do mundo", f"{float(overview['% do mundo']) * 100:.1f}%",
+                  border=True)
+    with col3:
+        st.metric("Países", str(int(overview["Países"])), border=True)
+    with col4:
+        st.metric("Setores", str(int(overview["Setores"])), border=True)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Primeira atividade",
+                  _format_activity(overview["Primeira atividade"]), border=True)
+    with col2:
+        st.metric("Última atividade",
+                  _format_activity(overview["Última atividade"]), border=True)
+
+
+def render_group_victims(victims, group):
+    st.subheader("Vítimas")
+    st.caption(f"Ataques a instituições anunciadas por {group} no período")
+    if victims.empty:
+        st.info("Sem dados para o período")
+        return
+    display = victims.copy()
+    display["Data"] = localize_victim_dates(display["Data"])
+    st.dataframe(display, hide_index=True)
+
+
+def render_group_monthly(monthly, group):
+    st.subheader("Ataques mensais")
+    st.caption(
+        "Evolução do número de ataques ransomware anunciados ao longo dos últimos meses"
+    )
+    labels = month_labels(monthly["date"])
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### Todos os grupos")
+        st.plotly_chart(
+            line_with_mean(labels, monthly["world_attacks"], "Todos os grupos",
+                           _COLOR_WORLD,
+                           hover="Incidentes: %{y}<extra></extra>",
+                           mean=monthly["world_attacks"].mean()),
+        )
+    with col2:
+        st.write(f"###### {group}")
+        if monthly["group_attacks"].sum() > 0:
+            st.plotly_chart(
+                line_with_mean(labels, monthly["group_attacks"], group, "green",
+                               hover="Incidentes: %{y}<extra></extra>",
+                               mean=monthly["group_attacks"].mean()),
+            )
+        else:
+            st.info("Sem dados para o período")
+
+
+def render_group_countries(world_countries, group_countries, distinct, group):
+    st.subheader("Países mais afetados")
+    st.caption(
+        "Países com maior número de vítimas de ransomware anunciadas durante o período"
+    )
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### Todos os grupos")
+        if world_countries.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(world_countries, "counts", "country", "midnightblue",
+                               hover_label="Incidentes"),
+            )
+    with col2:
+        st.write(f"###### {group}")
+        if group_countries.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(group_countries, "counts", "country", "teal",
+                               hover_label="Incidentes"),
+            )
+    with st.container(border=True):
+        st.write("###### Países distintos atacados por mês")
+        if distinct.empty:
+            st.info("Sem dados para o período")
+        else:
+            labels = month_labels(distinct["date"])
+            st.plotly_chart(
+                line_with_mean(labels, distinct["distinct_countries"],
+                               "Países distintos", "teal",
+                               hover="Países: %{y}<extra></extra>"),
+            )
+
+
+def render_group_geography(world_countries, group_countries, group):
+    st.subheader("Distribuição geográfica dos ataques")
+    st.caption(
+        "Todos os países com pelo menos um ataque anunciado durante o período, "
+        "em escala logarítmica"
+    )
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### Todos os grupos")
+        st.plotly_chart(choropleth_chart(world_countries))
+    with col2:
+        st.write(f"###### {group}")
+        if group_countries.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(choropleth_chart(group_countries))
+
+
+def render_group_sectors(world_sectors, group_sectors, distinct, group):
+    st.subheader("Setores mais atacados")
+    st.caption(
+        "Setores econômicos com maior número de vítimas anunciadas durante o período"
+    )
+    col1, col2 = st.columns(2, border=True)
+    with col1:
+        st.write("###### Todos os grupos")
+        if world_sectors.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(world_sectors, "attacks", "sector", "orangered",
+                               hover_label="Incidentes"),
+            )
+    with col2:
+        st.write(f"###### {group}")
+        if group_sectors.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(group_sectors, "attacks", "sector", "royalblue",
+                               hover_label="Incidentes"),
+            )
+    with st.container(border=True):
+        st.write("###### Setores distintos atacados por mês")
+        if distinct.empty:
+            st.info("Sem dados para o período")
+        else:
+            labels = month_labels(distinct["date"])
+            st.plotly_chart(
+                line_with_mean(labels, distinct["distinct_sectors"],
+                               "Setores distintos", "royalblue",
+                               hover="Setores: %{y}<extra></extra>"),
+            )
+
+
+def render_group_daily_heatmap(world, period):
+    st.subheader("Distribuição diária dos ataques")
+    st.caption(
+        "Quantidade de ataques por dia da semana ao longo dos últimos meses"
+    )
+    with st.container(border=True):
+        st.write("###### No mundo")
+        if world.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(daily_heatmap_chart(world, period))
+
+
+def group_historical_chart(series, group):
+    labels = month_labels(series["date"])
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=series["world_attacks"],
+            name="Todos os grupos",
+            line=dict(color=_COLOR_WORLD, width=3),
+            mode="lines+markers",
+        ),
+        secondary_y=False,
+    )
+    fig.add_trace(
+        go.Scatter(
+            x=labels,
+            y=series["group_attacks"],
+            name=group,
+            line=dict(color="green", width=3),
+            mode="lines+markers",
+        ),
+        secondary_y=True,
+    )
+
+    world_max = series["world_attacks"].max()
+    group_max = series["group_attacks"].max()
+    y1_max = world_max * 1.1 if world_max else 5
+    if group_max == 0:
+        y2_max = 5
+    else:
+        world_scale = y1_max / world_max if world_max else 1
+        ratio = 6 if group_max < world_max * 0.1 else 2
+        y2_max = group_max * ratio * world_scale
+
+    fig.update_layout(
+        showlegend=True,
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="left", x=0),
+        margin=dict(l=0, r=0, t=30, b=0),
+        hovermode="x unified",
+        plot_bgcolor="white",
+    )
+    fig.update_xaxes(showgrid=False, type="category")
+    fig.update_yaxes(
+        title_text="Incidentes Mundiais",
+        secondary_y=False,
+        showgrid=True,
+        gridcolor="lightgray",
+        gridwidth=0.5,
+        title_font=dict(color=_COLOR_WORLD),
+        range=[0, y1_max],
+    )
+    fig.update_yaxes(
+        title_text=f"Incidentes em {group}",
+        secondary_y=True,
+        showgrid=False,
+        title_font=dict(color="green"),
+        range=[0, y2_max],
+    )
+    return fig
+
+
+def render_group_historical(series, group):
+    st.subheader("Série histórica")
+    st.caption(
+        f"Evolução do número de ataques ransomware no mundo e por {group} "
+        "desde o início da coleta de dados"
+    )
+    with st.container(border=True):
+        st.plotly_chart(group_historical_chart(series, group))
+
+
 data = load_dataset()
 
 min_date = data["published"].min().date()
 max_date = data["published"].max().date()
 
 st.sidebar.caption("Configurações")
+st.sidebar.subheader("Tipo de análise")
+analysis_type = st.sidebar.selectbox(
+    "Tipo de análise", ["Geográfica", "Atacante"], key="ransom_analysis"
+)
 st.sidebar.subheader("Período")
 period = normalize_period(period_widget("ransom", min_date, max_date))
-st.sidebar.subheader("País")
-iso_list = country_widget("ransom", default="BR")
-name = selection_label(iso_list, country_name)
-multi_country = len(iso_list) >= 2
+
+if analysis_type == "Atacante":
+    default_group = data["group_name"].value_counts().idxmax()
+    st.sidebar.subheader("Grupo")
+    group = group_widget(
+        "ransom", data["group_name"].dropna().unique(), default=default_group
+    )
+else:
+    st.sidebar.subheader("País")
+    iso_list = country_widget("ransom", default="BR")
+    name = selection_label(iso_list, country_name)
+    multi_country = len(iso_list) >= 2
 
 try:
-    overview = ransom.overview(data, period, iso_list)
-    monthly = ransom.monthly_attacks(data, period, iso_list)
-    historical = ransom.historical_series(data, period, iso_list)
-    world_groups = ransom.top_groups(data, period, iso2=None)
-    country_groups = ransom.top_groups(data, period, iso2=iso_list)
-    group_activity = ransom.monthly_group_activity(data, period)
-    group_activity_country = ransom.monthly_group_activity(data, period, iso2=iso_list)
-    active_groups = ransom.monthly_active_groups(data, period)
-    active_groups_country = ransom.monthly_active_groups(data, period, iso2=iso_list)
-    countries = ransom.countries(data, period)
-    world_sectors = ransom.world_sectors(data, period)
-    country_sectors = ransom.country_sectors(data, period, iso_list)
-    victims = ransom.victims_table(data, period, iso_list)
-    heatmap = ransom.daily_heatmap(data, period)
-    heatmap_country = ransom.daily_heatmap(data, period, iso2=iso_list)
-    if multi_country:
-        monthly_by_country = ransom.monthly_attacks_by_country(data, period, iso_list)
-        countries_selected_frame = ransom.countries_selected(data, period, iso_list)
-        historical_multi = ransom.historical_series_multi(data, period, iso_list)
-        victims_display = victims_with_country(data, period, victims, iso_list)
+    if analysis_type == "Atacante":
+        group_metrics = ransom.group_overview(data, period, group)
+        group_monthly_data = ransom.group_monthly(data, period, group)
+        group_countries_data = ransom.group_countries(data, period, group)
+        group_sectors_data = ransom.group_sectors(data, period, group)
+        distinct_countries_data = ransom.distinct_countries_by_month(data, period, group)
+        distinct_sectors_data = ransom.distinct_sectors_by_month(data, period, group)
+        group_historical_data = ransom.group_historical_series(data, period, group)
+        group_victims_data = group_victims(data, period, group)
+        world_countries = ransom.countries(data, period)
+        world_sectors = ransom.world_sectors(data, period)
+        heatmap = ransom.daily_heatmap(data, period)
     else:
-        monthly_by_country = None
-        countries_selected_frame = None
-        historical_multi = None
-        victims_display = victims
+        overview = ransom.overview(data, period, iso_list)
+        monthly = ransom.monthly_attacks(data, period, iso_list)
+        historical = ransom.historical_series(data, period, iso_list)
+        world_groups = ransom.top_groups(data, period, iso2=None)
+        country_groups = ransom.top_groups(data, period, iso2=iso_list)
+        group_activity = ransom.monthly_group_activity(data, period)
+        group_activity_country = ransom.monthly_group_activity(data, period, iso2=iso_list)
+        active_groups = ransom.monthly_active_groups(data, period)
+        active_groups_country = ransom.monthly_active_groups(data, period, iso2=iso_list)
+        countries = ransom.countries(data, period)
+        world_sectors = ransom.world_sectors(data, period)
+        country_sectors = ransom.country_sectors(data, period, iso_list)
+        victims = ransom.victims_table(data, period, iso_list)
+        heatmap = ransom.daily_heatmap(data, period)
+        heatmap_country = ransom.daily_heatmap(data, period, iso2=iso_list)
+        if multi_country:
+            monthly_by_country = ransom.monthly_attacks_by_country(data, period, iso_list)
+            countries_selected_frame = ransom.countries_selected(data, period, iso_list)
+            historical_multi = ransom.historical_series_multi(data, period, iso_list)
+            victims_display = victims_with_country(data, period, victims, iso_list)
+        else:
+            monthly_by_country = None
+            countries_selected_frame = None
+            historical_multi = None
+            victims_display = victims
 except EmptyPeriodError:
     st.warning(
         "Não há dados para o período selecionado. "
@@ -768,37 +1084,65 @@ if period_is_current(period, date.today()):
 tab_dashboard, tab_dataset = st.tabs(["Dashboard", "Dataset"])
 
 with tab_dashboard:
-    render_overview(overview, world_groups, name)
+    if analysis_type == "Atacante":
+        render_group_metrics(group_metrics, group)
 
-    st.write("")
-    render_victims(victims_display, name)
+        st.write("")
+        render_group_victims(group_victims_data, group)
 
-    st.write("")
-    render_monthly_attacks(monthly, name, by_country=monthly_by_country)
+        st.write("")
+        render_group_monthly(group_monthly_data, group)
 
-    st.write("")
-    render_groups(world_groups, country_groups, name)
+        st.write("")
+        render_group_countries(
+            world_countries, group_countries_data, distinct_countries_data, group
+        )
 
-    st.write("")
-    render_group_activity(group_activity, group_activity_country, name)
+        st.write("")
+        render_group_geography(world_countries, group_countries_data, group)
 
-    st.write("")
-    render_active_groups(active_groups, active_groups_country, name)
+        st.write("")
+        render_group_sectors(
+            world_sectors, group_sectors_data, distinct_sectors_data, group
+        )
 
-    st.write("")
-    render_countries(countries, selected=countries_selected_frame)
+        st.write("")
+        render_group_daily_heatmap(heatmap, period)
 
-    st.write("")
-    render_geography(countries)
+        st.write("")
+        render_group_historical(group_historical_data, group)
+    else:
+        render_overview(overview, world_groups, name)
 
-    st.write("")
-    render_sectors(world_sectors, country_sectors, name)
+        st.write("")
+        render_victims(victims_display, name)
 
-    st.write("")
-    render_daily_heatmap(heatmap, heatmap_country, period, name)
+        st.write("")
+        render_monthly_attacks(monthly, name, by_country=monthly_by_country)
 
-    st.write("")
-    render_historical_series(historical, name, multi_series=historical_multi)
+        st.write("")
+        render_groups(world_groups, country_groups, name)
+
+        st.write("")
+        render_group_activity(group_activity, group_activity_country, name)
+
+        st.write("")
+        render_active_groups(active_groups, active_groups_country, name)
+
+        st.write("")
+        render_countries(countries, selected=countries_selected_frame)
+
+        st.write("")
+        render_geography(countries)
+
+        st.write("")
+        render_sectors(world_sectors, country_sectors, name)
+
+        st.write("")
+        render_daily_heatmap(heatmap, heatmap_country, period, name)
+
+        st.write("")
+        render_historical_series(historical, name, multi_series=historical_multi)
 
 with tab_dataset:
     st.subheader("Dataset")

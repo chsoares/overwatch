@@ -73,6 +73,15 @@ def country_widget(key, default="BR"):
     return [options[label] for label in chosen]
 
 
+def group_widget(key, groups, default=None):
+    """Render the group selector (single group) and return one group name."""
+    options = sorted(g for g in groups if g)
+    if not options:
+        return ""
+    index = options.index(default) if default in options else 0
+    return st.sidebar.selectbox("Grupo", options, index=index, key=f"{key}_group")
+
+
 def vendor_widget(key, vendors, default="all"):
     """Render the vendor selector and return the chosen vendor (or 'all')."""
     options = ["all"] + sorted(v for v in vendors if v)

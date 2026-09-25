@@ -325,6 +325,73 @@ def test_ransomware_delta_hidden_when_previous_period_is_empty():
     assert module.has_previous_period(ransom.overview(df, monthly, "BR")) is True
 
 
+def test_ransomware_analysis_type_selector_defaults_to_geography():
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    selectors = [
+        widget for widget in app.sidebar.selectbox if widget.label == "Tipo de análise"
+    ]
+    assert selectors, "analysis type selector not found"
+    assert selectors[0].value == "Geográfica"
+    assert [widget.label for widget in app.sidebar.multiselect] == ["Países"]
+
+
+def test_ransomware_group_mode_renders_without_exception():
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    # Seed the widget key before the first run. Toggling the sidebar after a
+    # geography render trips the AppTest harness on the stale "Variação"
+    # segmented control (element-tree ``ValueError``), so the group mode is
+    # selected up front instead.
+    app.session_state["ransom_analysis"] = "Atacante"
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+
+    metric_labels = [metric.label for metric in app.metric]
+    for expected in ("Primeira atividade", "Última atividade"):
+        assert expected in metric_labels, f"missing metric: {expected}"
+
+    subheaders = [item.value for item in app.subheader]
+    assert "Métricas" in subheaders
+    for removed in (
+        "Grupos mais ativos",
+        "Evolução das atividades dos grupos",
+        "Grupos em atividade",
+    ):
+        assert removed not in subheaders, f"section should not render: {removed}"
+
+
+def test_group_victims_table_keeps_country_column():
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("ransomware_page", PAGE)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    df = ransom.load_dataset(RANSOM_CSV)
+    period = {"type": "annual", "start": date(2024, 1, 1), "end": date(2024, 12, 31)}
+    group = "qilin"
+
+    current = df[
+        (df["published"] >= pd.Timestamp("2024-01-01"))
+        & (df["published"] <= pd.Timestamp("2024-12-31"))
+    ]
+    victims = module.group_victims(df, period, group)
+    assert list(victims.columns) == ["Vítima", "País", "Setor", "Grupo", "Data"]
+    assert len(victims) == int((current["group_name"] == group).sum())
+    assert set(victims["Grupo"]) == {"Qilin"}
+
+    empty = module.group_victims(df, EMPTY_PERIOD, group)
+    assert list(empty.columns) == ["Vítima", "País", "Setor", "Grupo", "Data"]
+    assert empty.empty
+
+
 def test_vulnerability_page_compiles():
     py_compile.compile(str(VULN_PAGE), doraise=True)
 
