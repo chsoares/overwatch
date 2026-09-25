@@ -15,6 +15,10 @@ def _rows(df, year=2024):
     return df[mask]
 
 
+def _rows_all(df, year):
+    return df[df["published"].dt.year == year]
+
+
 def _axis_months(world):
     return set(zip(world["date"].dt.year, world["date"].dt.month))
 
@@ -35,8 +39,47 @@ def test_group_overview_metrics():
     assert result["Setores"] == valid_sectors["activity_classified"].nunique()
     assert result["Setores"] == len(ransom.group_sectors(df, PERIOD, GROUP))
     assert result["has_previous"] is True
-    assert pd.Timestamp("2024-01-01") <= result["Primeira atividade"] <= result["Última atividade"]
-    assert result["Última atividade"] <= pd.Timestamp("2024-12-31 23:59:59.999999")
+
+    all_time = df[df["group_name"] == GROUP]
+    assert result["Primeira atividade"] == all_time["published"].min()
+    assert result["Última atividade"] == all_time["published"].max()
+
+
+def test_group_overview_first_last_are_all_time_not_period_bound():
+    df = ransom.load_dataset(RANSOM_CSV)
+    monthly = {"type": "monthly", "start": date(2024, 1, 1), "end": date(2024, 1, 31)}
+
+    result = ransom.group_overview(df, monthly, GROUP)
+
+    all_time = df[df["group_name"] == GROUP]
+    period_start = pd.Timestamp("2024-01-01")
+    assert result["Primeira atividade"] == all_time["published"].min()
+    assert result["Última atividade"] == all_time["published"].max()
+    assert result["Primeira atividade"] < period_start
+    assert result["Última atividade"] > pd.Timestamp("2024-01-31 23:59:59")
+
+
+def test_group_overview_previous_metrics_for_all_first_row_metrics():
+    df = ransom.load_dataset(RANSOM_CSV)
+    previous = _rows(df, 2023)
+
+    result = ransom.group_overview(df, PERIOD, GROUP)
+
+    assert set(
+        ["Ataques_anterior", "% do mundo_anterior", "Países_anterior", "Setores_anterior"]
+    ).issubset(result)
+    assert result["Ataques_anterior"] == len(previous)
+    valid_previous_sectors = previous[
+        previous["activity_classified"] != "Not Found"
+    ]["activity_classified"]
+    assert result["Países_anterior"] == previous["country"].nunique()
+    assert result["Setores_anterior"] == valid_previous_sectors.nunique()
+    assert isinstance(result["Países_anterior"], int)
+    assert isinstance(result["Setores_anterior"], int)
+    assert result["Países_anterior"] >= 0
+    assert result["Setores_anterior"] >= 0
+    assert 0.0 <= result["% do mundo_anterior"] <= 1.0
+    assert result["% do mundo_anterior"] == len(previous) / len(_rows_all(df, 2023))
 
 
 def test_group_overview_empty_group_is_zero_but_period_valid():

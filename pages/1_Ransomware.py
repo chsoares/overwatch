@@ -766,21 +766,36 @@ def render_group_metrics(overview, group):
     st.caption(
         f"Indicadores de {group} no período e participação no total anunciado"
     )
+    has_previous = overview["has_previous"]
     attacks = int(overview["Ataques"])
     previous = int(overview["Ataques_anterior"])
-    delta = format_delta(attacks, previous, "Absoluta", overview["has_previous"])
+    attacks_delta = format_delta(attacks, previous, "Absoluta", has_previous)
+
+    pct = float(overview["% do mundo"]) * 100
+    pct_previous = float(overview["% do mundo_anterior"]) * 100
+    pct_delta = format_delta(pct, pct_previous, "Absoluta", has_previous)
+
+    countries = int(overview["Países"])
+    countries_previous = int(overview["Países_anterior"])
+    countries_delta = format_delta(countries, countries_previous, "Absoluta", has_previous)
+
+    sectors = int(overview["Setores"])
+    sectors_previous = int(overview["Setores_anterior"])
+    sectors_delta = format_delta(sectors, sectors_previous, "Absoluta", has_previous)
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        st.metric("Ataques", str(attacks), delta,
-                  delta_color=delta_color(delta), border=True)
+        st.metric("Ataques", str(attacks), attacks_delta,
+                  delta_color=delta_color(attacks_delta), border=True)
     with col2:
-        st.metric("% do mundo", f"{float(overview['% do mundo']) * 100:.1f}%",
-                  border=True)
+        st.metric("% do mundo", f"{pct:.1f}%", pct_delta,
+                  delta_color=delta_color(pct_delta), border=True)
     with col3:
-        st.metric("Países", str(int(overview["Países"])), border=True)
+        st.metric("Países", str(countries), countries_delta,
+                  delta_color=delta_color(countries_delta), border=True)
     with col4:
-        st.metric("Setores", str(int(overview["Setores"])), border=True)
+        st.metric("Setores", str(sectors), sectors_delta,
+                  delta_color=delta_color(sectors_delta), border=True)
 
     col1, col2 = st.columns(2)
     with col1:

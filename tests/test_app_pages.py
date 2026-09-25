@@ -367,6 +367,20 @@ def test_ransomware_group_mode_renders_without_exception():
         assert removed not in subheaders, f"section should not render: {removed}"
 
 
+def test_ransomware_group_metrics_show_deltas_for_all_first_row_metrics():
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.session_state["ransom_analysis"] = "Atacante"
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    metrics = {metric.label: metric for metric in app.metric}
+    for label in ("Ataques", "% do mundo", "Países", "Setores"):
+        assert label in metrics, f"missing metric: {label}"
+        assert metrics[label].delta, f"missing delta for metric: {label}"
+
+
 def test_group_victims_table_keeps_country_column():
     import importlib.util
 
