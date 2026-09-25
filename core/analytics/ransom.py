@@ -623,6 +623,165 @@ def country_sectors(df, period, iso2):
     return country_sectors
 
 
+def group_overview(df, period, group):
+    """Metrics for one group plus its share of the world total."""
+    current, previous, _ = filter_periods(df, period)
+    require_data(current, period)
+    g = current[current["group_name"] == group]
+    world_total = len(current)
+    attacks = len(g)
+    pct = (attacks / world_total) if world_total else 0.0
+    n_countries = g["country"].nunique()
+    sectors = g["activity_classified"].nunique()
+    first = g["published"].min() if not g.empty else pd.NaT
+    last = g["published"].max() if not g.empty else pd.NaT
+    prev_attacks = (
+        int((previous["group_name"] == group).sum()) if not previous.empty else 0
+    )
+    return {
+        "Ataques": attacks,
+        "Ataques_anterior": prev_attacks,
+        "% do mundo": pct,
+        "Países": n_countries,
+        "Setores": sectors,
+        "Primeira atividade": first,
+        "Última atividade": last,
+    }
+
+
+def group_monthly(df, period, group):
+    """Monthly attacks for one group. Columns: date, world_attacks, group_attacks."""
+    _, _, monthly_data = filter_periods(df, period)
+    require_data(monthly_data, period)
+    monthly_data = monthly_data.copy()
+    monthly_data["year"] = monthly_data["published"].dt.year
+    monthly_data["month"] = monthly_data["published"].dt.month.map(month_name)
+    monthly_data["sigla"] = monthly_data["published"].dt.month.map(month_abbr)
+    all_months = month_axis(
+        monthly_data["published"].min(),
+        monthly_axis_end(monthly_data["published"].max(), period),
+        include_year=True,
+    )
+    world = (
+        monthly_data.groupby(["year", "month", "sigla"]).size().reset_index(name="world_attacks")
+    )
+    world = all_months[["year", "month", "sigla"]].merge(
+        world, how="left", on=["year", "month", "sigla"]
+    ).fillna(0)
+    grp = monthly_data[monthly_data["group_name"] == group]
+    grp = (
+        grp.groupby(["year", "month", "sigla"]).size().reset_index(name="group_attacks")
+    )
+    grp = all_months[["year", "month", "sigla"]].merge(
+        grp, how="left", on=["year", "month", "sigla"]
+    ).fillna(0)
+    return pd.DataFrame(
+        {
+            "date": all_months["published"],
+            "world_attacks": world["world_attacks"],
+            "group_attacks": grp["group_attacks"],
+        }
+    )
+
+
+def group_countries(df, period, group):
+    """Per-country attack counts for one group (shape of ``countries``)."""
+    current, _, _ = filter_periods(df, period)
+    require_data(current, period)
+    g = current[current["group_name"] == group]
+    counts = g["country"].value_counts().reset_index()
+    counts.columns = ["ISO2", "counts"]
+    counts = counts.merge(iso_frame(), how="left", on="ISO2").dropna()[
+        ["country", "ISO3", "ISO2", "counts"]
+    ]
+    total = len(g)
+    counts["proportion"] = (counts["counts"] / total).round(3) if total else 0
+    return counts
+
+
+def group_sectors(df, period, group):
+    """Per-sector counts for one group (shape of ``world_sectors``)."""
+    current, _, _ = filter_periods(df, period)
+    require_data(current, period)
+    data = _translated(current)
+    g = data[(data["group_name"] == group) & (data["activity_classified"] != "Not Found")]
+    sectors = g["activity_classified_pt"].value_counts().reset_index()
+    sectors.columns = ["sector", "attacks"]
+    total = len(g)
+    sectors["proportion"] = (sectors["attacks"] / total).round(3) if total else 0
+    return sectors
+
+
+def distinct_countries_by_month(df, period, group):
+    """Distinct countries attacked per month by one group."""
+    _, _, monthly_data = filter_periods(df, period)
+    require_data(monthly_data, period)
+    monthly_data = monthly_data.copy()
+    monthly_data["year"] = monthly_data["published"].dt.year
+    monthly_data["sigla"] = monthly_data["published"].dt.month.map(month_abbr)
+    g = monthly_data[monthly_data["group_name"] == group]
+    if g.empty:
+        return pd.DataFrame(columns=["date", "distinct_countries"])
+    counts = (
+        g.groupby(["year", "sigla"])["country"]
+        .nunique()
+        .reset_index(name="distinct_countries")
+    )
+    counts["date"] = counts.apply(
+        lambda r: month_to_timestamp(r["year"], r["sigla"]), axis=1
+    )
+    return counts[["date", "distinct_countries"]].sort_values("date").reset_index(drop=True)
+
+
+def distinct_sectors_by_month(df, period, group):
+    """Distinct sectors attacked per month by one group."""
+    _, _, monthly_data = filter_periods(df, period)
+    require_data(monthly_data, period)
+    monthly_data = monthly_data.copy()
+    monthly_data["year"] = monthly_data["published"].dt.year
+    monthly_data["sigla"] = monthly_data["published"].dt.month.map(month_abbr)
+    g = monthly_data[
+        (monthly_data["group_name"] == group)
+        & (monthly_data["activity_classified"] != "Not Found")
+    ]
+    if g.empty:
+        return pd.DataFrame(columns=["date", "distinct_sectors"])
+    counts = (
+        g.groupby(["year", "sigla"])["activity_classified"]
+        .nunique()
+        .reset_index(name="distinct_sectors")
+    )
+    counts["date"] = counts.apply(
+        lambda r: month_to_timestamp(r["year"], r["sigla"]), axis=1
+    )
+    return counts[["date", "distinct_sectors"]].sort_values("date").reset_index(drop=True)
+
+
+def group_historical_series(df, period, group, today=None):
+    """World series + one-group series. Columns: date, world_attacks, group_attacks."""
+    world = historical_series(df, period, iso2=None, today=today)
+    dates = world["date"]
+    labels = pd.to_datetime(dates)
+    year = labels.dt.year
+    sigla = labels.dt.month.map(month_abbr)
+    gm = df[df["group_name"] == group].copy()
+    gm["year"] = gm["published"].dt.year
+    gm["sigla"] = gm["published"].dt.month.map(month_abbr)
+    counts = gm.groupby(["year", "sigla"]).size().reset_index(name="group_attacks")
+    merged = (
+        pd.DataFrame({"year": year, "sigla": sigla})
+        .merge(counts, how="left", on=["year", "sigla"])
+        .fillna(0)
+    )
+    return pd.DataFrame(
+        {
+            "date": dates,
+            "world_attacks": world["world_attacks"],
+            "group_attacks": merged["group_attacks"].astype(int),
+        }
+    )
+
+
 def victims_table(df, period, iso2):
     """Legacy ``analyze_victims`` victim listing for ``iso2``."""
     current, _, _ = filter_periods(df, period)
