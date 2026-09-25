@@ -171,7 +171,7 @@ def country_series_chart(series, name_fn):
     return fig
 
 
-def choropleth_chart(countries):
+def choropleth_chart(countries, colorscale="reds"):
     data = countries.copy()
     data["log_counts"] = np.log1p(data["counts"])
     text = data["country"] + "<br>Incidentes: " + data["counts"].astype(str)
@@ -180,7 +180,7 @@ def choropleth_chart(countries):
             locations=data["ISO3"],
             z=data["log_counts"],
             text=text,
-            colorscale="reds",
+            colorscale=colorscale,
             marker_line_color="darkgray",
             marker_line_width=1,
             showscale=False,
@@ -828,14 +828,6 @@ def render_group_monthly(monthly, group):
     labels = month_labels(monthly["date"])
     col1, col2 = st.columns(2, border=True)
     with col1:
-        st.write("###### Todos os grupos")
-        st.plotly_chart(
-            line_with_mean(labels, monthly["world_attacks"], "Todos os grupos",
-                           _COLOR_WORLD,
-                           hover="Incidentes: %{y}<extra></extra>",
-                           mean=monthly["world_attacks"].mean()),
-        )
-    with col2:
         st.write(f"###### {group}")
         if monthly["group_attacks"].sum() > 0:
             st.plotly_chart(
@@ -845,6 +837,14 @@ def render_group_monthly(monthly, group):
             )
         else:
             st.info("Sem dados para o período")
+    with col2:
+        st.write("###### Todos os grupos")
+        st.plotly_chart(
+            line_with_mean(labels, monthly["world_attacks"], "Todos os grupos",
+                           _COLOR_WORLD,
+                           hover="Incidentes: %{y}<extra></extra>",
+                           mean=monthly["world_attacks"].mean()),
+        )
 
 
 def render_group_countries(world_countries, group_countries, distinct, group):
@@ -854,15 +854,6 @@ def render_group_countries(world_countries, group_countries, distinct, group):
     )
     col1, col2 = st.columns(2, border=True)
     with col1:
-        st.write("###### Todos os grupos")
-        if world_countries.empty:
-            st.info("Sem dados para o período")
-        else:
-            st.plotly_chart(
-                horizontal_bar(world_countries, "counts", "country", "midnightblue",
-                               hover_label="Incidentes"),
-            )
-    with col2:
         st.write(f"###### {group}")
         if group_countries.empty:
             st.info("Sem dados para o período")
@@ -871,16 +862,29 @@ def render_group_countries(world_countries, group_countries, distinct, group):
                 horizontal_bar(group_countries, "counts", "country", "teal",
                                hover_label="Incidentes"),
             )
+    with col2:
+        st.write("###### Todos os grupos")
+        if world_countries.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(world_countries, "counts", "country", "midnightblue",
+                               hover_label="Incidentes"),
+            )
     with st.container(border=True):
         st.write("###### Países distintos atacados por mês")
         if distinct.empty:
             st.info("Sem dados para o período")
         else:
             labels = month_labels(distinct["date"])
+            mean_distinct = distinct["distinct_countries"].mean()
             st.plotly_chart(
                 line_with_mean(labels, distinct["distinct_countries"],
-                               "Países distintos", "teal",
-                               hover="Países: %{y}<extra></extra>"),
+                               "Países distintos", "royalblue",
+                               mean=mean_distinct, mean_color="lightskyblue",
+                               hover="Países: %{y}<extra></extra>",
+                               y_range=[0, mean_distinct * 1.6 if mean_distinct else 5],
+                               height=300),
             )
 
 
@@ -892,14 +896,14 @@ def render_group_geography(world_countries, group_countries, group):
     )
     col1, col2 = st.columns(2, border=True)
     with col1:
-        st.write("###### Todos os grupos")
-        st.plotly_chart(choropleth_chart(world_countries))
-    with col2:
         st.write(f"###### {group}")
         if group_countries.empty:
             st.info("Sem dados para o período")
         else:
-            st.plotly_chart(choropleth_chart(group_countries))
+            st.plotly_chart(choropleth_chart(group_countries, colorscale="blues"))
+    with col2:
+        st.write("###### Todos os grupos")
+        st.plotly_chart(choropleth_chart(world_countries))
 
 
 def render_group_sectors(world_sectors, group_sectors, distinct, group):
@@ -909,15 +913,6 @@ def render_group_sectors(world_sectors, group_sectors, distinct, group):
     )
     col1, col2 = st.columns(2, border=True)
     with col1:
-        st.write("###### Todos os grupos")
-        if world_sectors.empty:
-            st.info("Sem dados para o período")
-        else:
-            st.plotly_chart(
-                horizontal_bar(world_sectors, "attacks", "sector", "orangered",
-                               hover_label="Incidentes"),
-            )
-    with col2:
         st.write(f"###### {group}")
         if group_sectors.empty:
             st.info("Sem dados para o período")
@@ -926,16 +921,29 @@ def render_group_sectors(world_sectors, group_sectors, distinct, group):
                 horizontal_bar(group_sectors, "attacks", "sector", "royalblue",
                                hover_label="Incidentes"),
             )
+    with col2:
+        st.write("###### Todos os grupos")
+        if world_sectors.empty:
+            st.info("Sem dados para o período")
+        else:
+            st.plotly_chart(
+                horizontal_bar(world_sectors, "attacks", "sector", "orangered",
+                               hover_label="Incidentes"),
+            )
     with st.container(border=True):
         st.write("###### Setores distintos atacados por mês")
         if distinct.empty:
             st.info("Sem dados para o período")
         else:
             labels = month_labels(distinct["date"])
+            mean_distinct = distinct["distinct_sectors"].mean()
             st.plotly_chart(
                 line_with_mean(labels, distinct["distinct_sectors"],
-                               "Setores distintos", "royalblue",
-                               hover="Setores: %{y}<extra></extra>"),
+                               "Setores distintos", "darkorange",
+                               mean=mean_distinct, mean_color="navajowhite",
+                               hover="Setores: %{y}<extra></extra>",
+                               y_range=[0, mean_distinct * 1.6 if mean_distinct else 5],
+                               height=300),
             )
 
 
