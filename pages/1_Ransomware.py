@@ -755,7 +755,7 @@ def group_victims(data, period, group):
         + ". "
         + published.dt.year.astype(str)
     ).str.replace(" 0", " ").str.lower()
-    victims["country"] = victims["country"].map(country_name)
+    victims["country"] = victims["country"].map(country_name).fillna("—")
     victims["group_name"] = victims["group_name"].str.title()
     victims.columns = columns
     return victims
