@@ -773,7 +773,10 @@ def render_group_metrics(overview, group):
 
     pct = float(overview["% do mundo"]) * 100
     pct_previous = float(overview["% do mundo_anterior"]) * 100
-    pct_delta = format_delta(pct, pct_previous, "Absoluta", has_previous)
+    if has_previous:
+        pct_delta = f"{pct - pct_previous:+.1f}"
+    else:
+        pct_delta = None
 
     countries = int(overview["Países"])
     countries_previous = int(overview["Países_anterior"])
