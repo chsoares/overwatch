@@ -475,11 +475,10 @@ def render_overview(overview, world_groups, name):
                   delta_color=delta_color(delta), border=True)
     with col4:
         if world_groups.empty:
-            st.metric("Grupo mais ativo", "—", "Sem dados", delta_color="off", border=True)
+            st.metric("Grupo mais ativo", "—", border=True)
         else:
             top = world_groups.sort_values("counts", ascending=False).iloc[0]
-            st.metric("Grupo mais ativo", top["group_name"],
-                      f"{int(top['counts'])} ataques", delta_color="off", border=True)
+            st.metric("Grupo mais ativo", top["group_name"], border=True)
 
 
 def victims_with_country(data, period, victims, iso_list):
@@ -767,24 +766,31 @@ def render_group_metrics(overview, group):
         f"Indicadores de {group} no período e participação no total anunciado"
     )
     has_previous = overview["has_previous"]
+    mode = st.segmented_control(
+        "Variação", ["Absoluta", "Percentual"], default="Absoluta",
+        key="group_variation",
+    ) or "Absoluta"
+
     attacks = int(overview["Ataques"])
     previous = int(overview["Ataques_anterior"])
-    attacks_delta = format_delta(attacks, previous, "Absoluta", has_previous)
+    attacks_delta = format_delta(attacks, previous, mode, has_previous)
 
     pct = float(overview["% do mundo"]) * 100
     pct_previous = float(overview["% do mundo_anterior"]) * 100
-    if has_previous:
-        pct_delta = f"{pct - pct_previous:+.1f}"
-    else:
+    if not has_previous:
         pct_delta = None
+    elif mode == "Percentual":
+        pct_delta = format_delta(pct, pct_previous, "Percentual", has_previous)
+    else:
+        pct_delta = f"{pct - pct_previous:+.1f}"
 
     countries = int(overview["Países"])
     countries_previous = int(overview["Países_anterior"])
-    countries_delta = format_delta(countries, countries_previous, "Absoluta", has_previous)
+    countries_delta = format_delta(countries, countries_previous, mode, has_previous)
 
     sectors = int(overview["Setores"])
     sectors_previous = int(overview["Setores_anterior"])
-    sectors_delta = format_delta(sectors, sectors_previous, "Absoluta", has_previous)
+    sectors_delta = format_delta(sectors, sectors_previous, mode, has_previous)
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:

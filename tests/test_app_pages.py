@@ -381,6 +381,58 @@ def test_ransomware_group_metrics_show_deltas_for_all_first_row_metrics():
         assert metrics[label].delta, f"missing delta for metric: {label}"
 
 
+def test_ransomware_most_active_group_metric_has_no_delta():
+    """The geography overview's most-active group is a label, not a variation.
+
+    The other three metrics carry a period-over-period delta; the fourth used
+    to render the attack count as a fake second line, unbalancing the row.
+    """
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    metrics = {metric.label: metric for metric in app.metric}
+    assert not metrics["Grupo mais ativo"].delta
+    for label in ("Ataques no mundo", "Ataques em Brasil", "Grupos ativos"):
+        assert metrics[label].delta, f"missing delta for metric: {label}"
+
+
+def test_ransomware_group_metrics_offer_variation_selector():
+    """Group metrics mirror the geography overview's absolute/percent toggle.
+
+    The widget value is seeded before the first run: ``AppTest``'s
+    ``ButtonGroup.set_value`` cannot drive a single-select ``segmented_control``
+    in this Streamlit version (it indexes string characters against the option
+    protos and raises ``ValueError``).
+    """
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.session_state["ransom_analysis"] = "Atacante"
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    controls = [widget for widget in app.button_group if widget.label == "Variação"]
+    assert controls, "group variation control not found"
+    assert controls[0].key == "group_variation"
+    assert controls[0].value == "Absoluta"
+
+    absolute = {metric.label: metric.delta for metric in app.metric}
+    assert not absolute["% do mundo"].endswith("%")
+
+    percent_app = AppTest.from_file(str(PAGE), default_timeout=120)
+    percent_app.session_state["ransom_analysis"] = "Atacante"
+    percent_app.session_state["group_variation"] = "Percentual"
+    percent_app.run()
+
+    assert not percent_app.exception, [e.value for e in percent_app.exception]
+    percent = {metric.label: metric.delta for metric in percent_app.metric}
+    for label in ("Ataques", "% do mundo", "Países", "Setores"):
+        assert percent[label].endswith("%"), percent[label]
+
+
 def test_group_victims_table_keeps_country_column():
     import importlib.util
 
