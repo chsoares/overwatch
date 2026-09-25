@@ -131,7 +131,7 @@ def monthly_axis_end(end, period):
         year, month = period["start"].year, period["start"].month
         month_end = pd.Timestamp(f"{year}-{month:02d}-01") + pd.offsets.MonthEnd()
         return month_end.replace(hour=23, minute=59, second=59, microsecond=999999)
-    if kind == "custom":
+    if kind in ("custom", "total"):
         return end
     return end + pd.DateOffset(months=1)
 

@@ -293,6 +293,38 @@ def test_empty_period_analytics_raise_for_the_page_guard():
     assert "st.stop()" in source
 
 
+def test_ransomware_delta_hidden_when_previous_period_is_empty():
+    """A missing previous slice must hide every ransom delta.
+
+    Under period type ``total`` the previous slice is empty by design, so the
+    overview reports zero for every previous metric and the page must pass
+    ``has_previous=False`` to ``format_delta`` instead of rendering ``+N`` or
+    ``+∞%`` against a bogus zero baseline.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("ransomware_page", PAGE)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    df = ransom.load_dataset(RANSOM_CSV)
+    total = {
+        "type": "total",
+        "start": df["published"].min().date(),
+        "end": df["published"].max().date(),
+    }
+    assert module.has_previous_period(ransom.overview(df, total, "BR")) is False
+    assert module.format_delta(18672, 0, "Absoluta", has_previous=False) is None
+    assert module.format_delta(18672, 0, "Percentual", has_previous=False) is None
+
+    monthly = {
+        "type": "monthly",
+        "start": date(2026, 1, 1),
+        "end": date(2026, 1, 31),
+    }
+    assert module.has_previous_period(ransom.overview(df, monthly, "BR")) is True
+
+
 def test_vulnerability_page_compiles():
     py_compile.compile(str(VULN_PAGE), doraise=True)
 

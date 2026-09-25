@@ -29,6 +29,37 @@ def _monthly(year, month):
     }
 
 
+def _total(frame):
+    return {
+        "type": "total",
+        "start": frame["published"].min().date(),
+        "end": frame["published"].max().date(),
+    }
+
+
+def test_monthly_attacks_total_has_no_trailing_zero_month(df):
+    result = ransom.monthly_attacks(df, _total(df))
+
+    last = result["date"].iloc[-1]
+    assert (last.year, last.month) == (
+        df["published"].max().year,
+        df["published"].max().month,
+    )
+    assert result["world_attacks"].iloc[-1] > 0
+    assert not (result["date"] > last).any()
+
+
+def test_monthly_group_activity_total_has_no_trailing_zero_month(df):
+    result = ransom.monthly_group_activity(df, _total(df))
+
+    last = result["date"].max()
+    assert (last.year, last.month) == (
+        df["published"].max().year,
+        df["published"].max().month,
+    )
+    assert result[result["date"] == last]["attacks"].sum() > 0
+
+
 # 2024-02 is a past month whose frozen-fixture 12-month window starts on a
 # midnight timestamp (2023-03-01 00:00:00), which is what used to leak the
 # extra month. 2026-04 reproduces the live report (the whole selected month is

@@ -420,6 +420,20 @@ def historical_series_multi_chart(series, name_fn):
     return fig
 
 
+def has_previous_period(overview):
+    """Whether ``overview`` holds a non-empty previous period.
+
+    The overview reports ``Ataques no período anterior`` as ``len(previous)``,
+    so a positive value means a real baseline exists. Period type ``total``
+    slices an empty previous by design; gating the deltas on this keeps
+    ``format_delta`` from inventing ``+N`` / ``+∞%`` against a zero baseline.
+    """
+    previous = overview.loc[
+        overview["Métrica"] == "Ataques no período anterior", "Mundo"
+    ].iloc[0]
+    return int(previous) > 0
+
+
 def render_overview(overview, world_groups, name):
     st.subheader("Visão geral")
     st.caption("Métricas de ataques no período e variação em relação ao período anterior")
@@ -437,18 +451,19 @@ def render_overview(overview, world_groups, name):
     mode = st.segmented_control(
         "Variação", ["Absoluta", "Percentual"], default="Absoluta"
     ) or "Absoluta"
+    has_previous = has_previous_period(overview)
 
     col1, col2, col3, col4 = st.columns(4)
     with col1:
-        delta = format_delta(world_current, world_previous, mode)
+        delta = format_delta(world_current, world_previous, mode, has_previous)
         st.metric("Ataques no mundo", str(world_current), delta,
                   delta_color=delta_color(delta), border=True)
     with col2:
-        delta = format_delta(country_current, country_previous, mode)
+        delta = format_delta(country_current, country_previous, mode, has_previous)
         st.metric(f"Ataques em {name}", str(country_current), delta,
                   delta_color=delta_color(delta), border=True)
     with col3:
-        delta = format_delta(groups_current, groups_previous, mode)
+        delta = format_delta(groups_current, groups_previous, mode, has_previous)
         st.metric("Grupos ativos", str(groups_current), delta,
                   delta_color=delta_color(delta), border=True)
     with col4:
