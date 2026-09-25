@@ -33,3 +33,18 @@ def test_normalize_period_monthly_leap_year():
 def test_normalize_period_invalid_month():
     with pytest.raises(ValueError):
         periods.normalize_period({"type": "monthly", "year": 2024, "month": 13})
+
+
+from datetime import date
+from core.periods import normalize_period
+
+
+def test_normalize_period_total_uses_data_bounds():
+    result = normalize_period(
+        {"type": "total", "data_min": date(2023, 1, 1), "data_max": date(2026, 9, 25)}
+    )
+    assert result == {
+        "type": "total",
+        "start": date(2023, 1, 1),
+        "end": date(2026, 9, 25),
+    }

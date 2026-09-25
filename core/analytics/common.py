@@ -95,6 +95,10 @@ def filter_periods(df, period, date_col="published"):
         monthly = df[(dates >= start) & (dates <= current_end)].copy()
         return current, previous, monthly
 
+    if kind == "total":
+        empty = df.iloc[0:0]
+        return df, empty, df.copy()
+
     start_date = pd.Timestamp(datetime.combine(period["start"], time.min))
     end_date = pd.Timestamp(datetime.combine(period["end"], time.max))
     current = df[(dates >= start_date) & (dates <= end_date)]

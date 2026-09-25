@@ -33,6 +33,8 @@ def period_widget(key, min_date, max_date, default=None):
     current = next((pt for pt, en in PERIOD_TYPES.items() if en == default_type), "Mensal")
     selected_pt = st.sidebar.selectbox("Tipo de Período", names, index=names.index(current), key=f"{key}_type")
     kind = PERIOD_TYPES[selected_pt]
+    if kind == "total":
+        return {"type": kind, "data_min": min_date, "data_max": max_date}
     period = {"type": kind, "year": default_year, "month": default_month,
               "custom": {"start_date": custom_start, "end_date": custom_end}}
     if kind in ("annual", "monthly"):
