@@ -632,7 +632,9 @@ def group_overview(df, period, group):
     attacks = len(g)
     pct = (attacks / world_total) if world_total else 0.0
     n_countries = g["country"].nunique()
-    sectors = g["activity_classified"].nunique()
+    sectors = g[g["activity_classified"] != "Not Found"][
+        "activity_classified"
+    ].nunique()
     first = g["published"].min() if not g.empty else pd.NaT
     last = g["published"].max() if not g.empty else pd.NaT
     prev_attacks = (
@@ -646,6 +648,7 @@ def group_overview(df, period, group):
         "Setores": sectors,
         "Primeira atividade": first,
         "Última atividade": last,
+        "has_previous": not previous.empty,
     }
 
 

@@ -31,7 +31,10 @@ def test_group_overview_metrics():
     assert result["Ataques_anterior"] == len(previous)
     assert result["% do mundo"] == len(group) / len(current)
     assert result["Países"] == group["country"].nunique()
-    assert result["Setores"] == group["activity_classified"].nunique()
+    valid_sectors = group[group["activity_classified"] != "Not Found"]
+    assert result["Setores"] == valid_sectors["activity_classified"].nunique()
+    assert result["Setores"] == len(ransom.group_sectors(df, PERIOD, GROUP))
+    assert result["has_previous"] is True
     assert pd.Timestamp("2024-01-01") <= result["Primeira atividade"] <= result["Última atividade"]
     assert result["Última atividade"] <= pd.Timestamp("2024-12-31 23:59:59.999999")
 
@@ -41,6 +44,14 @@ def test_group_overview_empty_group_is_zero_but_period_valid():
     result = ransom.group_overview(df, PERIOD, "does-not-exist")
     assert result["Ataques"] == 0
     assert result["% do mundo"] == 0.0
+    assert result["has_previous"] is True
+
+
+def test_group_overview_total_period_has_no_previous():
+    df = ransom.load_dataset(RANSOM_CSV)
+    total_period = {"type": "total", "start": date(2024, 1, 1), "end": date(2024, 12, 31)}
+    result = ransom.group_overview(df, total_period, GROUP)
+    assert result["has_previous"] is False
 
 
 def test_group_monthly_axis_matches_world_and_sums_to_group():
