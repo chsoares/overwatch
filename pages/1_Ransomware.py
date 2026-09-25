@@ -60,10 +60,10 @@ _COLORWAY_COUNTRY = [
     "#8C564B", "#E377C2", "#7F7F7F", "#BCBD22", "#17BECF",
 ]
 _COLOR_WORLD = "firebrick"
-_COLOR_SELECTION = "black"
+_COLOR_SELECTION = "green"
 _COLORWAY_HISTORY_COUNTRY = [
     "darkslateblue", "darkorange", "teal", "rebeccapurple", "royalblue",
-    "yellowgreen", "midnightblue", "darkgreen", "orangered", "darkred",
+    "midnightblue", "darkcyan", "slategray", "sienna", "orchid",
 ]
 
 st.set_page_config(
@@ -101,8 +101,8 @@ def group_activity_chart(activity, colorway=None):
                 y=group_data["attacks"],
                 name=group,
                 mode="lines+markers",
-                line=dict(width=2, shape="linear"),
-                marker=dict(size=6),
+                line=dict(width=3, shape="linear"),
+                marker=dict(size=7),
                 hovertemplate="<b>%{x}</b><br>Grupo: " + group
                 + "<br>Incidentes: %{y}<extra></extra>",
             )
@@ -131,7 +131,7 @@ def country_series_chart(series, name_fn):
     series["month_label"] = month_labels(series["date"])
     fig = go.Figure()
     for code in series.columns:
-        if code == "date":
+        if code in ("date", "month_label"):
             continue
         label = name_fn(code)
         fig.add_trace(
@@ -140,8 +140,8 @@ def country_series_chart(series, name_fn):
                 y=series[code],
                 name=label,
                 mode="lines+markers",
-                line=dict(width=2, shape="linear"),
-                marker=dict(size=6),
+                line=dict(width=3, shape="linear"),
+                marker=dict(size=7),
                 hovertemplate="<b>%{x}</b><br>" + label
                 + "<br>Incidentes: %{y}<extra></extra>",
             )
@@ -361,7 +361,7 @@ def historical_series_multi_chart(series, name_fn):
             x=labels,
             y=series["selection_attacks"],
             name="países selecionados",
-            line=dict(color=_COLOR_SELECTION, width=3, dash="dash"),
+            line=dict(color=_COLOR_SELECTION, width=3),
             mode="lines+markers",
         ),
         secondary_y=True,
@@ -377,7 +377,8 @@ def historical_series_multi_chart(series, name_fn):
                     color=_COLORWAY_HISTORY_COUNTRY[
                         index % len(_COLORWAY_HISTORY_COUNTRY)
                     ],
-                    width=2,
+                    width=3,
+                    dash="dash",
                 ),
                 mode="lines+markers",
                 hovertemplate="<b>%{x}</b><br>" + label
