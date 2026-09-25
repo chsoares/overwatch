@@ -3,6 +3,22 @@
 import plotly.graph_objects as go
 
 
+def mean_line_range(values, floor=5):
+    """Y-axis upper bound for a mean-line chart that never clips the peak.
+
+    Uses ``mean * 1.6`` when the series is flat enough (headroom around the
+    mean), but falls back to ``max * 1.1`` when a peak would exceed that, so the
+    highest point is always visible with a little slack. Empty/all-NaN series
+    fall back to ``floor``.
+    """
+    series = values.dropna()
+    if series.empty:
+        return [0, floor]
+    peak = float(series.max())
+    mean = float(series.mean())
+    return [0, max(mean * 1.6, peak * 1.1, floor)]
+
+
 def horizontal_bar(data, value_col, label_col, color, hover_label, height=400, n=10):
     """Horizontal bar chart of the top ``n`` rows by ``value_col`` (ascending).
 

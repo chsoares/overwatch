@@ -63,3 +63,28 @@ def test_line_with_mean_omits_mean_trace_when_none():
     )
     assert len(fig.data) == 1
     assert fig.data[0].name == "Série"
+
+
+def test_mean_line_range_headroom_around_mean():
+    import pandas as pd
+    from core.charts import mean_line_range
+    # serie plana: mean dita o teto (respiro)
+    flat = pd.Series([18, 20, 22, 20])
+    assert mean_line_range(flat) == [0, max(flat.mean()*1.6, flat.max()*1.1, 5)]
+
+
+def test_mean_line_range_never_clips_peak():
+    import pandas as pd
+    from core.charts import mean_line_range
+    # outlier: teto >= maximo*1.1 (nunca corta o pico)
+    spiky = pd.Series([5, 5, 30, 5, 24, 28, 17, 13])
+    top = mean_line_range(spiky)[1]
+    assert top >= spiky.max() * 1.1 - 1e-9
+    assert mean_line_range(spiky) == [0, max(spiky.mean()*1.6, spiky.max()*1.1, 5)]
+
+
+def test_mean_line_range_empty_falls_back_to_floor():
+    import pandas as pd
+    from core.charts import mean_line_range
+    assert mean_line_range(pd.Series([], dtype=float)) == [0, 5]
+    assert mean_line_range(pd.Series([float("nan")])) == [0, 5]

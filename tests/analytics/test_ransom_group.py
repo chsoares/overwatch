@@ -196,3 +196,16 @@ def test_group_historical_series_world_matches_and_group_sums():
     ]
     assert result["group_attacks"].sum() == len(on_axis)
     assert result["group_attacks"].dtype.kind in "iu"
+
+
+def test_daily_heatmap_filters_by_group():
+    from core.analytics import ransom
+    from tests.analytics._datasets import RANSOM_CSV
+    from datetime import date
+    df = ransom.load_dataset(RANSOM_CSV)
+    p = {"type": "annual", "start": date(2024, 1, 1), "end": date(2024, 12, 31)}
+    world = ransom.daily_heatmap(df, p)
+    grp = ransom.daily_heatmap(df, p, group="qilin")
+    assert grp["count"].sum() < world["count"].sum()
+    assert grp["count"].sum() == (df[(df.group_name == "qilin") &
+        (df["published"].dt.year == 2024)].shape[0])

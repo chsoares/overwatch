@@ -360,8 +360,8 @@ def monthly_attacks_by_country(df, period, iso_list):
     return pd.DataFrame(result)
 
 
-def daily_heatmap(df, period, iso2=None):
-    """Legacy ``analyze_daily`` dashboard slice (global or per country)."""
+def daily_heatmap(df, period, iso2=None, group=None):
+    """Legacy ``analyze_daily`` dashboard slice (global, per country, or per group)."""
     kind = period["type"]
     year, month = period["start"].year, period["start"].month
 
@@ -385,6 +385,8 @@ def daily_heatmap(df, period, iso2=None):
     iso_list = normalize_iso2(iso2)
     if iso_list:
         selected = selected[selected["country"].isin(iso_list)]
+    if group is not None:
+        selected = selected[selected["group_name"] == group]
     if selected.empty:
         return pd.DataFrame(columns=["date", "day", "week", "count"])
     daily_counts = (

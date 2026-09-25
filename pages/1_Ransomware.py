@@ -18,7 +18,7 @@ from core.analytics.common import (
     selection_label,
     translate_sector,
 )
-from core.charts import horizontal_bar, line_with_mean
+from core.charts import horizontal_bar, line_with_mean, mean_line_range
 from core.dataset import ALL_COLUMNS, filter_dataset
 from core.filters import (
     country_widget,
@@ -611,7 +611,7 @@ def _plot_active_groups(active, color="rebeccapurple", mean_color="plum"):
         line_with_mean(labels, active["active_groups"], "Grupos ativos",
                        color, mean=mean_active, mean_color=mean_color,
                        hover="Grupos: %{y}<extra></extra>",
-                       y_range=[0, mean_active * 1.6], height=300),
+                       y_range=mean_line_range(active["active_groups"]), height=300),
     )
 
 
@@ -889,7 +889,7 @@ def render_group_countries(world_countries, group_countries, distinct, group):
                                "Países distintos", "royalblue",
                                mean=mean_distinct, mean_color="lightskyblue",
                                hover="Países: %{y}<extra></extra>",
-                               y_range=[0, mean_distinct * 1.6 if mean_distinct else 5],
+                               y_range=mean_line_range(distinct["distinct_countries"]),
                                height=300),
             )
 
@@ -948,18 +948,18 @@ def render_group_sectors(world_sectors, group_sectors, distinct, group):
                                "Setores distintos", "darkorange",
                                mean=mean_distinct, mean_color="navajowhite",
                                hover="Setores: %{y}<extra></extra>",
-                               y_range=[0, mean_distinct * 1.6 if mean_distinct else 5],
+                               y_range=mean_line_range(distinct["distinct_sectors"]),
                                height=300),
             )
 
 
-def render_group_daily_heatmap(world, period):
+def render_group_daily_heatmap(world, period, group):
     st.subheader("Distribuição diária dos ataques")
     st.caption(
         "Quantidade de ataques por dia da semana ao longo dos últimos meses"
     )
     with st.container(border=True):
-        st.write("###### No mundo")
+        st.write(f"###### {group}")
         if world.empty:
             st.info("Sem dados para o período")
         else:
@@ -1074,7 +1074,7 @@ try:
         group_victims_data = group_victims(data, period, group)
         world_countries = ransom.countries(data, period)
         world_sectors = ransom.world_sectors(data, period)
-        heatmap = ransom.daily_heatmap(data, period)
+        heatmap = ransom.daily_heatmap(data, period, group=group)
     else:
         overview = ransom.overview(data, period, iso_list)
         monthly = ransom.monthly_attacks(data, period, iso_list)
@@ -1139,7 +1139,7 @@ with tab_dashboard:
         )
 
         st.write("")
-        render_group_daily_heatmap(heatmap, period)
+        render_group_daily_heatmap(heatmap, period, group)
 
         st.write("")
         render_group_historical(group_historical_data, group)
