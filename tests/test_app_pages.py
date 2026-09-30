@@ -381,11 +381,11 @@ def test_ransomware_group_metrics_show_deltas_for_all_first_row_metrics():
         assert metrics[label].delta, f"missing delta for metric: {label}"
 
 
-def test_ransomware_most_active_group_metric_has_no_delta():
-    """The geography overview's most-active group is a label, not a variation.
+def test_ransomware_overview_metrics_are_uniform_in_a_normal_period():
+    """With a previous period, all four overview metrics carry a second value.
 
-    The other three metrics carry a period-over-period delta; the fourth used
-    to render the attack count as a fake second line, unbalancing the row.
+    The most-active group shows its attack count as the fourth value; the other
+    three show period-over-period deltas. The row must be uniform.
     """
     AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
 
@@ -394,9 +394,24 @@ def test_ransomware_most_active_group_metric_has_no_delta():
 
     assert not app.exception, [e.value for e in app.exception]
     metrics = {metric.label: metric for metric in app.metric}
-    assert not metrics["Grupo mais ativo"].delta
-    for label in ("Ataques no mundo", "Ataques em Brasil", "Grupos ativos"):
+    for label in ("Ataques no mundo", "Ataques em Brasil", "Grupos ativos",
+                  "Grupo mais ativo"):
         assert metrics[label].delta, f"missing delta for metric: {label}"
+
+
+def test_ransomware_overview_metrics_are_uniform_under_total():
+    """Under Total (no previous period) none of the four metrics has a delta."""
+    AppTest = pytest.importorskip("streamlit.testing.v1").AppTest
+
+    app = AppTest.from_file(str(PAGE), default_timeout=120)
+    app.session_state["ransom_type"] = "Total"
+    app.run()
+
+    assert not app.exception, [e.value for e in app.exception]
+    metrics = {metric.label: metric for metric in app.metric}
+    for label in ("Ataques no mundo", "Ataques em Brasil", "Grupos ativos",
+                  "Grupo mais ativo"):
+        assert not metrics[label].delta, f"unexpected delta under Total: {label}"
 
 
 def test_ransomware_group_metrics_offer_variation_selector():
