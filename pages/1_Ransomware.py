@@ -478,7 +478,9 @@ def render_overview(overview, world_groups, name):
             st.metric("Grupo mais ativo", "—", border=True)
         else:
             top = world_groups.sort_values("counts", ascending=False).iloc[0]
-            st.metric("Grupo mais ativo", top["group_name"], border=True)
+            top_counts = f"{int(top['counts'])} ataques" if has_previous else None
+            st.metric("Grupo mais ativo", top["group_name"], top_counts,
+                      delta_color="off", border=True)
 
 
 def victims_with_country(data, period, victims, iso_list):
