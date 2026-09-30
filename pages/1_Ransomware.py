@@ -1182,17 +1182,22 @@ with tab_dataset:
     st.subheader("Dataset")
     st.caption("Dados brutos carregados de `data/ransom_dataset.csv`")
 
+    data_display = (
+        data.drop(columns=["activity", "used_fallback"])
+        .rename(columns={"activity_classified": "activity"})
+    )
+
     col1, col2 = st.columns([0.3, 0.7])
     with col1:
         column = st.selectbox(
             "Coluna",
-            [ALL_COLUMNS] + list(data.columns),
+            [ALL_COLUMNS] + list(data_display.columns),
             key="ransom_dataset_column",
         )
     with col2:
         query = st.text_input("Termo de busca", key="ransom_dataset_query")
 
-    filtered = filter_dataset(data, column, query)
+    filtered = filter_dataset(data_display, column, query)
     st.caption(f"{len(filtered)} registros encontrados")
     st.dataframe(filtered, hide_index=True)
     st.download_button(
